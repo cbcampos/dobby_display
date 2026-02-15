@@ -230,6 +230,8 @@ def build_quickglance():
     events = get_calendar_events()
     
     current_event = None
+    current_event_time = None
+    current_location = None
     next_event = None
     next_event_time = None
     next_location = None
@@ -244,6 +246,8 @@ def build_quickglance():
             # Check if event hasn't ended yet
             if not event_end or event_end > now:
                 current_event = event.get("summary", "Event")
+                current_event_time = event_start.strftime("%-I:%M %p")
+                current_location = event.get("location", "")
         elif not next_event and event_start and event_start > now:
                 next_event = event.get("summary", "Event")
                 next_event_time = event_start.strftime("%-I:%M %p")
@@ -322,6 +326,8 @@ def build_quickglance():
         "weather_low": weather["low"],
         "weather_desc": weather["desc"],
         "current_event": current_event if current_event else "Free Time",
+        "current_event_time": current_event_time if current_event_time else "",
+        "current_location": current_location if current_location else "",
         "next_event": next_event if next_event else "None",
         "next_event_time": next_event_time if next_event_time else "",
         "next_location": next_location if next_location else "",
