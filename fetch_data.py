@@ -191,20 +191,20 @@ def get_family_tasks():
             content = t.get("content", "")
             due = t.get("due", {})
             due_date = due.get("date") if due else None
+            due_str = None
             if due_date:
                 # Format date nicely
                 try:
                     from datetime import datetime
                     dt = datetime.strptime(due_date, "%Y-%m-%d")
                     due_str = dt.strftime("%b %d")
-                    content = f"{content} ({due_str})"
                 except:
-                    content = f"{content} ({due_date})"
-            task_list.append(content)
+                    due_str = due_date
+            task_list.append({"name": content, "due": due_str})
         return task_list
     except Exception as e:
         print(f"Family tasks error: {e}")
-        return ["Deep clean floors (May safety)", "Follow up on steam cleaner", "Plan week meals"]
+        return [{"name": "Set up Todoist", "due": None}, {"name": "Check API key", "due": None}]
 
 def parse_event_time(start_str):
     """Parse event time string to datetime"""
