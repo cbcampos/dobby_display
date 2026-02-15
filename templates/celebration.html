@@ -1,0 +1,82 @@
+{# Birthday/Celebration Display Mode #}
+<div class="celebration animate-in">
+    <div class="celebration-icon">{{ state.content.icon or "🎂" }}</div>
+    <div class="celebration-title">{{ state.content.title or "Birthday Today!" }}</div>
+    
+    {% if state.content.celebrations %}
+    <div class="celebration-list">
+        {% for celeb in state.content.celebrations %}
+        <div class="celebration-card">
+            <div class="celeb-name">{{ celeb.name }}</div>
+            <div class="celeb-age">{{ celeb.age }}</div>
+            <div class="celeb-date">{{ celeb.date }}</div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="celebration-card">
+        <div class="celeb-name">{{ state.content.name or "Family Member" }}</div>
+        <div class="celeb-age">{{ state.content.age or "" }}</div>
+    </div>
+    {% endif %}
+    
+    {% if state.content.message %}
+    <div class="celebration-message">{{ state.content.message }}</div>
+    {% endif %}
+</div>
+
+<style>
+.celebration {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    text-align: center;
+}
+.celebration-icon {
+    font-size: 6rem;
+    margin-bottom: 20px;
+}
+.celebration-title {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 30px;
+}
+.celebration-list {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.celebration-card {
+    background: linear-gradient(135deg, rgba(255, 182, 193, 0.3) 0%, rgba(255, 218, 185, 0.3) 100%);
+    border-radius: 20px;
+    padding: 30px 50px;
+    text-align: center;
+}
+.celeb-name {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.celeb-age {
+    font-size: 1.5rem;
+    opacity: 0.8;
+}
+.celeb-date {
+    font-size: 1rem;
+    opacity: 0.6;
+    margin-top: 5px;
+}
+.celebration-message {
+    font-size: 1.5rem;
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+}
+</style>

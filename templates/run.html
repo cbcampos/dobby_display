@@ -1,0 +1,38 @@
+{# Run Display Mode #}
+<div class="run-display animate-in">
+    <div class="run-card">
+        <div class="run-icon">🏃</div>
+        <div class="run-stat">{{ state.content.distance or "8.03" }}</div>
+        <div class="run-label">miles</div>
+    </div>
+    
+    <div class="run-card">
+        <div class="run-icon">⏱️</div>
+        <div class="run-stat">{{ state.content.time or "1:00:59" }}</div>
+        <div class="run-label">time</div>
+    </div>
+    
+    <div class="run-card">
+        <div class="run-icon">⚡</div>
+        <div class="run-stat">{{ state.content.pace or "7:36" }}</div>
+        <div class="run-label">/mi pace</div>
+    </div>
+    
+    <div class="run-card">
+        <div class="run-icon">❤️</div>
+        <div class="run-stat">{{ state.content.avg_hr or "143" }}</div>
+        <div class="run-label">avg HR</div>
+    </div>
+    
+    <div class="run-card">
+        <div class="run-icon">🔥</div>
+        <div class="run-stat">{{ state.content.calories or "851" }}</div>
+        <div class="run-label">calories</div>
+    </div>
+    
+    <div class="run-card">
+        <div class="run-icon">🧗</div>
+        <div class="run-stat">{{ state.content.elevation or "184" }}</div>
+        <div class="run-label">ft elevation</div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+{# Dashboard Mode #}
+<div class="dashboard animate-in">
+    <div class="card">
+        <h3>📅 Today</h3>
+        <div class="stat">{{ state.content.date or "Friday" }}</div>
+        <div class="stat-label">February 13, 2026</div>
+    </div>
+    
+    <div class="card">
+        <h3>🏃 Running</h3>
+        <div class="stat">8.03</div>
+        <div class="stat-label">miles today</div>
+    </div>
+    
+    <div class="card">
+        <h3>👨‍👩‍👧‍👦 Family</h3>
+        <div class="stat">2</div>
+        <div class="stat-label">kids</div>
+    </div>
+    
+    <div class="card">
+        <h3>💤 Sleep</h3>
+        <div class="stat">7h 1m</div>
+        <div class="stat-label">last night</div>
+    </div>
+    
+    <div class="card">
+        <h3>❤️ Health</h3>
+        <div class="stat">83</div>
+        <div class="stat-label">sleep score</div>
+    </div>
+    
+    <div class="card">
+        <h3>📝 Tasks</h3>
+        <div class="stat">{{ state.content.tasks or "3" }}</div>
+        <div class="stat-label">due today</div>
+    </div>
+</div>

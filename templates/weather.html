@@ -1,0 +1,47 @@
+{# Weather Nudge Display Mode #}
+<div class="weather-nudge animate-in">
+    <div class="weather-icon-large">{{ state.content.icon or "🌤️" }}</div>
+    <div class="weather-temp">{{ state.content.temp or "72°" }}</div>
+    <div class="weather-desc">{{ state.content.description or "Partly cloudy" }}</div>
+    <div class="weather-nudge-text">{{ state.content.nudge or "Grab a jacket — it's breezy!" }}</div>
+    <div class="weather-time">{{ state.content.time or "This evening" }}</div>
+</div>
+
+<style>
+.weather-nudge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    text-align: center;
+}
+.weather-icon-large {
+    font-size: 8rem;
+    margin-bottom: 20px;
+}
+.weather-temp {
+    font-size: 5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.weather-desc {
+    font-size: 1.8rem;
+    opacity: 0.8;
+    margin: 10px 0 30px;
+}
+.weather-nudge-text {
+    font-size: 2.2rem;
+    padding: 20px 40px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+}
+.weather-time {
+    font-size: 1.2rem;
+    opacity: 0.6;
+    margin-top: 20px;
+}
+</style>

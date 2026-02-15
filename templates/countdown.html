@@ -1,0 +1,87 @@
+{# Countdown Display Mode #}
+<div class="countdown animate-in">
+    <div class="countdown-title">{{ state.content.title or "Countdown" }}</div>
+    <div class="countdown-event">{{ state.content.event or "Next Event" }}</div>
+    
+    <div class="countdown-display">
+        {% if state.content.days %}
+        <div class="countdown-unit">
+            <div class="countdown-number">{{ state.content.days }}</div>
+            <div class="countdown-label">days</div>
+        </div>
+        {% endif %}
+        
+        {% if state.content.hours %}
+        <div class="countdown-unit">
+            <div class="countdown-number">{{ state.content.hours }}</div>
+            <div class="countdown-label">hours</div>
+        </div>
+        {% endif %}
+        
+        {% if state.content.minutes %}
+        <div class="countdown-unit">
+            <div class="countdown-number">{{ state.content.minutes }}</div>
+            <div class="countdown-label">min</div>
+        </div>
+        {% endif %}
+    </div>
+    
+    {% if state.content.message %}
+    <div class="countdown-message">{{ state.content.message }}</div>
+    {% endif %}
+</div>
+
+<style>
+.countdown {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    text-align: center;
+}
+.countdown-title {
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    opacity: 0.7;
+    margin-bottom: 10px;
+}
+.countdown-event {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.countdown-display {
+    display: flex;
+    gap: 40px;
+}
+.countdown-unit {
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 30px 40px;
+    min-width: 150px;
+}
+.countdown-number {
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+.countdown-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.7;
+    margin-top: 10px;
+}
+.countdown-message {
+    font-size: 1.5rem;
+    margin-top: 40px;
+    padding: 20px 40px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+}
+</style>

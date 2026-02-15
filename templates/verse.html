@@ -1,0 +1,55 @@
+{# Verse/Fun Fact Display Mode #}
+<div class="verse animate-in">
+    {% if state.content.type == "verse" %}
+    <div class="verse-label">{{ state.content.label or "Verse of the Day" }}</div>
+    <div class="verse-icon">📖</div>
+    <div class="verse-text">"{{ state.content.text or "Trust in the LORD with all your heart..." }}"</div>
+    <div class="verse-ref">{{ state.content.reference or "Proverbs 3:5" }}</div>
+    {% elif state.content.type == "fact" %}
+    <div class="verse-label">{{ state.content.label or "Fun Fact" }}</div>
+    <div class="verse-icon">💡</div>
+    <div class="verse-text">{{ state.content.text or "Did you know?" }}</div>
+    {% if state.content.attribution %}
+    <div class="verse-ref">{{ state.content.attribution }}</div>
+    {% endif %}
+    {% else %}
+    <div class="verse-label">{{ state.content.label or "Daily Inspiration" }}</div>
+    <div class="verse-icon">✨</div>
+    <div class="verse-text">"{{ state.content.text or "The best time to plant a tree was 20 years ago. The second best time is now." }}"</div>
+    {% endif %}
+</div>
+
+<style>
+.verse {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    text-align: center;
+    padding: 40px;
+}
+.verse-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    opacity: 0.6;
+    margin-bottom: 20px;
+}
+.verse-icon {
+    font-size: 4rem;
+    margin-bottom: 30px;
+}
+.verse-text {
+    font-size: 2.2rem;
+    line-height: 1.5;
+    max-width: 800px;
+    font-style: italic;
+}
+.verse-ref {
+    font-size: 1.3rem;
+    margin-top: 30px;
+    opacity: 0.7;
+    font-weight: 600;
+}
+</style>

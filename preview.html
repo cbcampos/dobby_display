@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dobby Display Preview</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0f0f1a;
+            color: #fff;
+            padding: 20px;
+        }
+        h1 { text-align: center; margin-bottom: 30px; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .display-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 20px;
+            padding: 20px;
+            min-height: 300px;
+        }
+        .card-title {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.6;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+        
+        /* Dashboard Preview */
+        .dashboard-preview .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .stat-box {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-num { font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-label { font-size: 0.7rem; opacity: 0.7; }
+        
+        /* Weather Preview */
+        .weather-preview { text-align: center; padding: 20px; }
+        .weather-icon { font-size: 4rem; }
+        .weather-temp { font-size: 3rem; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .weather-desc { opacity: 0.7; margin: 10px 0; }
+        .weather-nudge { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; font-size: 1.1rem; }
+        
+        /* Celebration Preview */
+        .celeb-preview { text-align: center; padding: 20px; }
+        .celeb-icon { font-size: 4rem; }
+        .celeb-title { font-size: 2rem; font-weight: 700; background: linear-gradient(135deg, #f093fb, #f5576c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 15px 0; }
+        .celeb-card { background: linear-gradient(135deg, rgba(255,182,193,0.3), rgba(255,218,185,0.3)); border-radius: 15px; padding: 20px; }
+        
+        /* Countdown Preview */
+        .countdown-preview { text-align: center; padding: 20px; }
+        .countdown-event { font-size: 1.8rem; font-weight: 700; background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
+        .countdown-units { display: flex; justify-content: center; gap: 15px; }
+        .countdown-unit { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px 25px; }
+        .countdown-num { font-size: 2.5rem; font-weight: 700; }
+        .countdown-lbl { font-size: 0.7rem; opacity: 0.6; text-transform: uppercase; }
+        
+        /* Verse Preview */
+        .verse-preview { text-align: center; padding: 30px; }
+        .verse-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.5; margin-bottom: 15px; }
+        .verse-icon { font-size: 3rem; margin-bottom: 15px; }
+        .verse-text { font-size: 1.4rem; font-style: italic; line-height: 1.5; }
+        .verse-ref { margin-top: 20px; opacity: 0.7; font-weight: 600; }
+        
+        /* Alert Preview */
+        .alert-preview { text-align: center; padding: 20px; }
+        .alert-icon { font-size: 4rem; }
+        .alert-title { font-size: 2rem; font-weight: 700; color: #ff4757; margin: 15px 0; }
+        .alert-msg { font-size: 1.3rem; }
+        .alert-action { margin-top: 20px; background: rgba(255,71,87,0.2); padding: 12px; border-radius: 10px; color: #ff4757; font-weight: 600; }
+        
+        /* Run Preview */
+        .run-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .run-card { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 15px; text-align: center; }
+        .run-icon { font-size: 1.8rem; }
+        .run-stat { font-size: 1.5rem; font-weight: 700; }
+        .run-label { font-size: 0.7rem; opacity: 0.7; }
+        
+        /* Meals Preview */
+        .meals-preview { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .meal-card { background: rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; }
+        .meal-day { font-size: 0.75rem; color: #667eea; font-weight: 600; }
+        .meal-item { font-size: 0.85rem; }
+        
+        /* Routine Preview */
+        .routine-preview { max-width: 400px; margin: 0 auto; }
+        .routine-step { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.1); border-radius: 12px; padding: 12px 15px; margin-bottom: 8px; }
+        .routine-num { width: 35px; height: 35px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+        .routine-text { font-size: 1rem; }
+    </style>
+</head>
+<body>
+    <h1>🧦 Dobby Display Preview</h1>
+    
+    <div class="grid">
+        <!-- Dashboard -->
+        <div class="display-card dashboard-preview">
+            <div class="card-title">📱 Dashboard (default)</div>
+            <div class="stats">
+                <div class="stat-box"><div class="stat-num">Fri</div><div class="stat-label">Today</div></div>
+                <div class="stat-box"><div class="stat-num">8.0</div><div class="stat-label">miles</div></div>
+                <div class="stat-box"><div class="stat-num">7h</div><div class="stat-label">sleep</div></div>
+                <div class="stat-box"><div class="stat-num">83</div><div class="stat-label">score</div></div>
+                <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">tasks</div></div>
+                <div class="stat-box"><div class="stat-num">2</div><div class="stat-label">kids</div></div>
+            </div>
+        </div>
+        
+        <!-- Weather -->
+        <div class="display-card weather-preview">
+            <div class="card-title">🌧️ Weather Nudge</div>
+            <div class="weather-icon">🌧️</div>
+            <div class="weather-temp">52°F</div>
+            <div class="weather-desc">Rainy and breezy</div>
+            <div class="weather-nudge">"Don't forget the umbrella and rain boots!"</div>
+        </div>
+        
+        <!-- Celebration -->
+        <div class="display-card celeb-preview">
+            <div class="card-title">🎂 Celebration</div>
+            <div class="celeb-icon">🎂</div>
+            <div class="celeb-title">🎉 Birthday Today! 🎉</div>
+            <div class="celeb-card">
+                <div style="font-size: 1.5rem; font-weight: 600;">Franklin</div>
+                <div style="opacity: 0.7;">turns 5!</div>
+            </div>
+        </div>
+        
+        <!-- Countdown -->
+        <div class="display-card countdown-preview">
+            <div class="card-title">⏱️ Countdown</div>
+            <div class="countdown-event">Christmas Day</div>
+            <div class="countdown-units">
+                <div class="countdown-unit"><div class="countdown-num">3</div><div class="countdown-lbl">days</div></div>
+                <div class="countdown-unit"><div class="countdown-num">8</div><div class="countdown-lbl">hours</div></div>
+                <div class="countdown-unit"><div class="countdown-num">42</div><div class="countdown-lbl">min</div></div>
+            </div>
+        </div>
+        
+        <!-- Verse -->
+        <div class="display-card verse-preview">
+            <div class="card-title">📖 Verse of the Day</div>
+            <div class="verse-label">Verse of the Day</div>
+            <div class="verse-icon">📖</div>
+            <div class="verse-text">"Trust in the LORD with all your heart, and do not lean on your own understanding."</div>
+            <div class="verse-ref">Proverbs 3:5</div>
+        </div>
+        
+        <!-- Alert -->
+        <div class="display-card alert-preview">
+            <div class="card-title">⚠️ Alert</div>
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-title">SEVERE WEATHER</div>
+            <div class="alert-msg">Tornado warning in effect until 8 PM</div>
+            <div class="alert-action">Take shelter now!</div>
+        </div>
+        
+        <!-- Run -->
+        <div class="display-card">
+            <div class="card-title">🏃 Run Display</div>
+            <div class="run-preview">
+                <div class="run-card"><div class="run-icon">🏃</div><div class="run-stat">8.03</div><div class="run-label">miles</div></div>
+                <div class="run-card"><div class="run-icon">⏱️</div><div class="run-stat">1:00</div><div class="run-label">time</div></div>
+                <div class="run-card"><div class="run-icon">⚡</div><div class="run-stat">7:36</div><div class="run-label">/mi</div></div>
+                <div class="run-card"><div class="run-icon">❤️</div><div class="run-stat">143</div><div class="run-label">avg HR</div></div>
+                <div class="run-card"><div class="run-icon">🔥</div><div class="run-stat">851</div><div class="run-label">cal</div></div>
+                <div class="run-card"><div class="run-icon">🧗</div><div class="run-stat">184</div><div class="run-label">ft elev</div></div>
+            </div>
+        </div>
+        
+        <!-- Meals -->
+        <div class="display-card">
+            <div class="card-title">🍽️ Meals This Week</div>
+            <div class="meals-preview">
+                <div class="meal-card"><div class="meal-day">Monday</div><div class="meal-item">Tacos</div></div>
+                <div class="meal-card"><div class="meal-day">Tuesday</div><div class="meal-item">Pasta</div></div>
+                <div class="meal-card"><div class="meal-day">Wednesday</div><div class="meal-item">Chicken</div></div>
+                <div class="meal-card"><div class="meal-day">Thursday</div><div class="meal-item">Pizza</div></div>
+                <div class="meal-card"><div class="meal-day">Friday</div><div class="meal-item">Salmon</div></div>
+                <div class="meal-card"><div class="meal-day">Saturday</div><div class="meal-item">Grill</div></div>
+            </div>
+        </div>
+        
+        <!-- Routine -->
+        <div class="display-card">
+            <div class="card-title">🌙 Bedtime Routine</div>
+            <div class="routine-preview">
+                <div class="routine-step"><div class="routine-num">1</div><div class="routine-text">Bowl</div></div>
+                <div class="routine-step"><div class="routine-num">2</div><div class="routine-text">Brush</div></div>
+                <div class="routine-step"><div class="routine-num">3</div><div class="routine-text">Book</div></div>
+                <div class="routine-step"><div class="routine-num">4</div><div class="routine-text">Bed</div></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

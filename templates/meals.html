@@ -1,0 +1,42 @@
+{# Meals Display Mode #}
+<div class="meals-grid animate-in">
+    <div class="meal-card">
+        <div class="meal-day">Monday</div>
+        <div class="meal-item">{{ state.content.monday or "Tacos" }}</div>
+    </div>
+    
+    <div class="meal-card">
+        <div class="meal-day">Tuesday</div>
+        <div class="meal-item">{{ state.content.tuesday or "Pasta" }}</div>
+    </div>
+    
+    <div class="meal-card">
+        <div class="meal-day">Wednesday</div>
+        <div class="meal-item">{{ state.content.wednesday or "Chicken" }}</div>
+    </div>
+    
+    <div class="meal-card">
+        <div class="meal-day">Thursday</div>
+        <div class="meal-item">{{ state.content.thursday or "Pizza" }}</div>
+    </div>
+    
+    <div class="meal-card">
+        <div class="meal-day">Friday</div>
+        <div class="meal-item">{{ state.content.friday or "Salmon" }}</div>
+    </div>
+    
+    <div class="meal-card">
+        <div class="meal-day">Saturday</div>
+        <div class="meal-item">{{ state.content.saturday or "Grill" }}</div>
+    </div>
+    
+    <div class="meal-card">
+        <div class="meal-day">Sunday</div>
+        <div class="meal-item">{{ state.content.sunday or "Slow cooker" }}</div>
+    </div>
+    
+    <div class="meal-card">
+        <div class="meal-day">Shopping List</div>
+        <div class="meal-item">{{ state.content.shopping or "Check list" }}</div>
+    </div>
+</div>

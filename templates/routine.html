@@ -1,0 +1,28 @@
+{# Routine Display Mode #}
+<div class="routine animate-in">
+    {% if state.content.steps %}
+        {% for step in state.content.steps %}
+        <div class="routine-step">
+            <div class="routine-number">{{ loop.index }}</div>
+            <div class="routine-text">{{ step }}</div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="routine-step">
+            <div class="routine-number">1</div>
+            <div class="routine-text">{{ state.content.step1 or "Bowl" }}</div>
+        </div>
+        <div class="routine-step">
+            <div class="routine-number">2</div>
+            <div class="routine-text">{{ state.content.step2 or "Brush" }}</div>
+        </div>
+        <div class="routine-step">
+            <div class="routine-number">3</div>
+            <div class="routine-text">{{ state.content.step3 or "Book" }}</div>
+        </div>
+        <div class="routine-step">
+            <div class="routine-number">4</div>
+            <div class="routine-text">{{ state.content.step4 or "Bed" }}</div>
+        </div>
+    {% endif %}
+</div>

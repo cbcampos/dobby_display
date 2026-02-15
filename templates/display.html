@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dobby Display</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow: hidden;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .mode-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .timestamp {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        .content {
+            flex: 1;
+            overflow: auto;
+        }
+        
+        /* Dashboard Mode */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .stat {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        
+        /* Run Display */
+        .run-display {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .run-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .run-stat {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        
+        .run-label {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+        
+        .run-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        
+        /* Meals Display */
+        .meals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .meal-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        .meal-day {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .meal-item {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .meal-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Routine Display */
+        .routine {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .routine-step {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px 30px;
+            margin-bottom: 15px;
+        }
+        
+        .routine-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .routine-text {
+            font-size: 1.3rem;
+        }
+        
+        /* Custom Content */
+        .custom-content {
+            text-align: center;
+            padding: 50px;
+        }
+        
+        .custom-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .custom-body {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            h1 { font-size: 1.2rem; }
+            .stat { font-size: 2rem; }
+            .run-stat { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+                🧦 Dobby Display
+                <span class="mode-badge">{{ state.mode }}</span>
+            </h1>
+            <div class="timestamp">Last updated: {{ state.updated }}</div>
+        </header>
+        
+        <div class="content">
+            {% if state.mode == 'dashboard' %}
+                {% include 'dashboard.html' %}
+            {% elif state.mode == 'run' %}
+                {% include 'run.html' %}
+            {% elif state.mode == 'meals' %}
+                {% include 'meals.html' %}
+            {% elif state.mode == 'routine' %}
+                {% include 'routine.html' %}
+            {% elif state.mode == 'weather' %}
+                {% include 'weather.html' %}
+            {% elif state.mode == 'celebration' %}
+                {% include 'celebration.html' %}
+            {% elif state.mode == 'countdown' %}
+                {% include 'countdown.html' %}
+            {% elif state.mode == 'verse' %}
+                {% include 'verse.html' %}
+            {% elif state.mode == 'alert' %}
+                {% include 'alert.html' %}
+            {% else %}
+                {% include 'custom.html' %}
+            {% endif %}
+        </div>
+    </div>
+    
+    <script>
+        // Auto-refresh every 30 seconds to check for updates
+        setInterval(() => {
+            fetch('/api/status')
+                .then(r => r.json())
+                .then(data => {
+                    // Force re-render by reloading if mode changed
+                    const currentMode = '{{ state.mode }}';
+                    if (data.mode !== currentMode) {
+                        location.reload();
+                    }
+                })
+                .catch(console.error);
+        }, 30000);
+    </script>
+</body>
+</html>

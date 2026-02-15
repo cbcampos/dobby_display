@@ -1,0 +1,89 @@
+{# Alert Display Mode #}
+<div class="alert animate-in">
+    {% if state.content.severity == "severe" %}
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-title">SEVERE WEATHER</div>
+    {% elif state.content.severity == "warning" %}
+    <div class="alert-icon">🌧️</div>
+    <div class="alert-title">Weather Advisory</div>
+    {% elif state.content.severity == "info" %}
+    <div class="alert-icon">ℹ️</div>
+    <div class="alert-title">Weather Update</div>
+    {% else %}
+    <div class="alert-icon">{{ state.content.icon or "📢" }}</div>
+    <div class="alert-title">{{ state.content.title or "Alert" }}</div>
+    {% endif %}
+    
+    <div class="alert-message">{{ state.content.message or "Check conditions" }}</div>
+    
+    {% if state.content.details %}
+    <div class="alert-details">
+        {% for detail in state.content.details %}
+        <div class="detail-item">{{ detail }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if state.content.action %}
+    <div class="alert-action">{{ state.content.action }}</div>
+    {% endif %}
+    
+    <div class="alert-time">{{ state.content.time or "" }}</div>
+</div>
+
+<style>
+.alert {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    text-align: center;
+    padding: 40px;
+}
+.alert-icon {
+    font-size: 6rem;
+    margin-bottom: 20px;
+}
+.alert-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    {% if state.content.severity == "severe" %}
+    color: #ff4757;
+    {% else %}
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    {% endif %}
+    margin-bottom: 30px;
+}
+.alert-message {
+    font-size: 2rem;
+    max-width: 700px;
+    line-height: 1.4;
+}
+.alert-details {
+    margin-top: 30px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 20px 40px;
+}
+.detail-item {
+    font-size: 1.3rem;
+    margin: 10px 0;
+}
+.alert-action {
+    font-size: 1.5rem;
+    margin-top: 30px;
+    padding: 15px 30px;
+    background: rgba(255, 71, 87, 0.2);
+    border-radius: 10px;
+    color: #ff4757;
+    font-weight: 600;
+}
+.alert-time {
+    font-size: 1rem;
+    opacity: 0.5;
+    margin-top: 30px;
+}
+</style>
