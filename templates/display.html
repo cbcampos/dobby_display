@@ -288,23 +288,27 @@
         }
         document.getElementById('friendly-updated').textContent = 'Updated ' + formatFriendlyTime('{{ state.updated }}');
         
-        // Auto-refresh every 10 seconds to check for updates
+        // Auto-refresh every 10 seconds to check for updates (skip in message mode)
         let lastUpdated = '{{ state.updated }}';
-        setInterval(() => {
-            fetch('/api/status')
-                .then(r => r.json())
-                .then(data => {
-                    if (data.updated !== lastUpdated) {
-                        lastUpdated = data.updated;
-                        document.getElementById('friendly-updated').textContent = 'Updated ' + formatFriendlyTime(data.updated);
-                        // Check for speech
-                        if (data.speak) {
-                            speak(data.speak);
+        const isMessageMode = '{{ state.mode }}' === 'message';
+        if (!isMessageMode) {
+            setInterval(() => {
+                fetch('/api/status')
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.updated !== lastUpdated) {
+                            lastUpdated = data.updated;
+                            document.getElementById('friendly-updated').textContent = 'Updated ' + formatFriendlyTime(data.updated);
+                            // Check for speech
+                            if (data.speak) {
+                                speak(data.speak);
+                            }
+                            location.reload();
                         }
-                        location.reload();
-                    }
-                })
-                .catch(console.error);
+                    })
+                    .catch(console.error);
+            }, 10000);
+        }
         }, 10000);
         
         function speak(text) {
