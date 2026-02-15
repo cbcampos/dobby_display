@@ -11,10 +11,10 @@ routines:
     leave_minutes_before: 15
     enabled: true
 
-  # Take Franklin to school - weekday mornings, check for "Take Franklin" or "Franklin to School" event
+  # Take Franklin to school - weekday mornings, check for "Take Franklin" or "Chris: Take Franklin to School" event
   - name: "Franklin to School"
     trigger_calendar: "Me and You"
-    trigger_event_contains: "Franklin"
+    trigger_event_contains: "Take Franklin"
     trigger_days: [1, 2, 3, 4, 5]  # Mon-Fri
     # Event time comes from the calendar event itself
     leave_minutes_before: 15
