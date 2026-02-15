@@ -12,6 +12,7 @@ import logging
 from datetime import datetime
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
