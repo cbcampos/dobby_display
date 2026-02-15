@@ -1,0 +1,156 @@
+{# Quick Glance Mode #}
+<div class="quick-glance animate-in">
+    <div class="qg-time">
+        <div class="qg-current-time">{{ state.content.time }}</div>
+        <div class="qg-date">{{ state.content.date }}</div>
+    </div>
+    
+    <div class="qg-weather">
+        <span class="qg-weather-icon">{{ state.content.weather_icon }}</span>
+        <span class="qg-weather-temp">{{ state.content.weather_temp }}</span>
+        <span class="qg-weather-desc">{{ state.content.weather_desc }}</span>
+    </div>
+    
+    <div class="qg-events">
+        <div class="qg-current-event">
+            <span class="qg-label">NOW</span>
+            <span class="qg-event-name">{{ state.content.current_event }}</span>
+        </div>
+        <div class="qg-next-event">
+            <span class="qg-label">NEXT</span>
+            <span class="qg-event-name">{{ state.content.next_event }}</span>
+            <span class="qg-event-time">{{ state.content.next_event_time }}</span>
+        </div>
+    </div>
+    
+    <div class="qg-dinner">
+        <span class="qg-label">DINNER</span>
+        <span class="qg-dinner-text">{{ state.content.dinner }}</span>
+    </div>
+    
+    <div class="qg-tasks">
+        <span class="qg-label">FAMILY TASKS</span>
+        <ul class="qg-task-list">
+            {% for task in state.content.tasks %}
+            <li>{{ task }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    {% if state.content.countdown %}
+    <div class="qg-countdown">
+        <span class="qg-label">{{ state.content.countdown_label }}</span>
+        <span class="qg-countdown-text">{{ state.content.countdown }}</span>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.quick-glance {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 15px;
+    padding: 10px;
+    height: 100%;
+}
+
+.qg-time {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 5px;
+}
+
+.qg-current-time {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.qg-date {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.qg-weather {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    font-size: 1.2rem;
+}
+
+.qg-events {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 20px;
+}
+
+.qg-current-event, .qg-next-event {
+    flex: 1;
+    padding: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+
+.qg-label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.6;
+    margin-bottom: 5px;
+}
+
+.qg-event-name {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.qg-event-time {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.qg-dinner {
+    padding: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+
+.qg-dinner-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.qg-tasks {
+    padding: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+
+.qg-task-list {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    font-size: 0.9rem;
+}
+
+.qg-task-list li {
+    padding: 3px 0;
+}
+
+.qg-countdown {
+    grid-column: 1 / -1;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.qg-countdown-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+</style>

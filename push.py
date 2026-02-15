@@ -64,6 +64,19 @@ def push_custom(title: str, text: str):
     except:
         return {"success": True, "raw": r.text}
 
+def push_quickglance(data: dict):
+    """Show quick glance dashboard"""
+    payload = {
+        "mode": "quickglance",
+        "title": "Quick Look",
+        "content": data
+    }
+    r = requests.post(f"{DEFAULT_URL}/api/update", json=payload)
+    try:
+        return r.json()
+    except:
+        return {"success": True, "raw": r.text}
+
 def push_weather(temp: str, description: str, icon: str, nudge: str, time: str = ""):
     """Show weather with nudge"""
     payload = {
@@ -143,7 +156,7 @@ def push_alert(message: str, severity: str = "info", title: str = "", details: l
 def main():
     parser = argparse.ArgumentParser(description="Push content to Dobby Display")
     parser.add_argument("--url", default=DEFAULT_URL, help="Display receiver URL")
-    parser.add_argument("--mode", required=True, choices=["dashboard", "run", "meals", "routine", "custom"])
+    parser.add_argument("--mode", required=True, choices=["dashboard", "run", "meals", "routine", "custom", "quickglance"])
     parser.add_argument("--data", help="JSON data for the content")
     parser.add_argument("--title", help="Title for custom mode")
     
@@ -163,6 +176,9 @@ def main():
         elif args.mode == "routine":
             data = json.loads(args.data) if args.data else []
             result = push_routine(data)
+        elif args.mode == "quickglance":
+            data = json.loads(args.data) if args.data else {}
+            result = push_quickglance(data)
         elif args.mode == "custom":
             result = push_custom(args.title or "Dobby", args.data or "Hello!")
         
