@@ -24,22 +24,17 @@
     </div>
     
     <div class="qg-left-col">
-        <!-- Branding -->
+        <!-- Branding removed per user request -->
         <div class="qg-branding">
-            <span class="qg-logo">D</span>
-            <span class="qg-title">Dobby Display</span>
-        </div>
         
         <!-- Time Block -->
         <div class="qg-time-block glass-tile">
             <div class="qg-current-time live-time">{{ state.content.time }}</div>
+            <span class="qg-countdown-inline {% if state.content.countdown_urgency == 'warning' or state.content.countdown_urgency == 'urgent' %}qg-countdown-urgent{% endif %}">
+                {% if state.content.countdown %}{{ state.content.countdown }}{% endif %}
+                {% if state.content.countdown_label %} ({{ state.content.countdown_label }}){% endif %}
+            </span>
             <div class="qg-date live-date">{{ state.content.date }}</div>
-        </div>
-        
-        <!-- Countdown Block -->
-        <div class="qg-countdown glass-tile-cyan">
-            <span class="qg-countdown-label">LEAVE</span>
-            <span class="qg-countdown-time">{{ state.content.countdown|default('5:45') }}</span>
         </div>
         
         <!-- Current Event -->
@@ -293,6 +288,23 @@
     font-size: 1.6rem;
     font-weight: 800;
     color: #0d0221;
+}
+
+/* Inline Countdown (next to time) */
+.qg-countdown-inline {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 5px;
+}
+
+.qg-countdown-urgent {
+    background: #fff;
+    color: #0d0221;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-weight: 700;
 }
 
 /* Event Tiles */

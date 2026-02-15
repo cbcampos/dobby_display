@@ -1,0 +1,237 @@
+{# Quick Glance Mode #}
+{% if config %}
+<style>
+.qg-current-time { font-size: {{ config.font_clock|default('5rem') }}; }
+.qg-date { font-size: {{ config.font_date|default('1.4rem') }}; }
+.qg-label { font-size: {{ config.font_label|default('1.1rem') }}; }
+.qg-event-name { font-size: {{ config.font_event|default('2.2rem') }}; }
+.qg-event-time { font-size: {{ config.font_event_time|default('1.6rem') }}; }
+.qg-weather-icon { font-size: {{ config.font_weather_icon|default('3rem') }}; }
+.qg-weather-temp { font-size: {{ config.font_weather_temp|default('2.8rem') }}; }
+.qg-dinner-text { font-size: {{ config.font_dinner|default('2rem') }}; }
+</style>
+{% endif %}
+<div class="quick-glance animate-in">
+    <div class="qg-left-col">
+        <div class="qg-time-block">
+            <div class="qg-current-time live-time">{{ state.content.time }}</div>
+            <div class="qg-date live-date">{{ state.content.date }}</div>
+        </div>
+        <div class="qg-current-event">
+            <span class="qg-label">NOW</span>
+            <span class="qg-event-name">{{ state.content.current_event if state.content.current_event else "Free Time" }}</span>
+            {% if state.content.current_event_time %}
+            <span class="qg-event-time">ends {{ state.content.current_event_time }}</span>
+            {% endif %}
+        </div>
+        <div class="qg-next-event">
+            <span class="qg-label">NEXT</span>
+            <span class="qg-event-name">{{ state.content.next_event if state.content.next_event else "Nothing scheduled" }}</span>
+            {% if state.content.next_event_time %}
+            <span class="qg-event-time">{{ state.content.next_event_time }}</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="qg-right-col">
+        <div class="qg-weather-block">
+            <span class="qg-weather-icon">{{ state.content.weather_icon }}</span>
+            <span class="qg-weather-temp">{{ state.content.weather_temp }}</span>
+            <span class="qg-weather-highlow">{{ state.content.weather_high }}° / {{ state.content.weather_low }}°</span>
+        </div>
+        <div class="qg-dinner">
+            <span class="qg-label">DINNER</span>
+            <span class="qg-dinner-text">{{ state.content.dinner if state.content.dinner else "TBD" }}</span>
+        </div>
+        <div class="qg-tasks-block">
+            <span class="qg-label">TASKS</span>
+            <div class="qg-tasks-list">{{ state.content.tasks if state.content.tasks else "No tasks" }}</div>
+        </div>
+    </div>
+</div>
+
+<style>
+.quick-glance {
+    display: grid;
+    grid-template-columns: 65% 35%;
+    gap: 20px;
+    padding: 30px;
+    height: 100vh;
+    box-sizing: border-box;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.qg-left-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.qg-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.qg-header {
+    padding: 10px 0;
+}
+
+.qg-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #ffd700;
+}
+
+.qg-time-block {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
+}
+
+.qg-current-time {
+    font-size: 5rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.1;
+}
+
+.qg-date {
+    font-size: 1.4rem;
+    color: rgba(255,255,255,0.7);
+    margin-top: 8px;
+}
+
+.qg-current-event, .qg-next-event {
+    padding: 20px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.qg-label {
+    display: block;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #ffd700;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.qg-event-name {
+    display: block;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.qg-event-time {
+    display: block;
+    font-size: 1.6rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+}
+
+.qg-weather-block {
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.qg-weather-icon {
+    font-size: 2rem;
+}
+
+.qg-weather-temp {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.qg-weather-highlow {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.5);
+}
+
+.qg-dinner {
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.qg-dinner .qg-label {
+    color: #ffd700;
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+.qg-dinner .qg-label {
+    color: #ffd700;
+}
+
+.qg-dinner-text {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.qg-tasks-block {
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    text-align: left;
+}
+
+.qg-tasks-block .qg-label {
+    color: #ffd700;
+    margin-bottom: 8px;
+}
+
+.qg-tasks-list {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.5;
+}
+</style>
+
+<script>
+(function() {
+    const workerCode = `
+        function formatTime() {
+            const now = new Date();
+            return {
+                time: now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }),
+                date: now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+            };
+        }
+        postMessage(formatTime());
+        setInterval(() => postMessage(formatTime()), 1000);
+    `;
+
+    const blob = new Blob([workerCode], { type: 'application/javascript' });
+    const worker = new Worker(URL.createObjectURL(blob));
+
+    worker.onmessage = ({ data }) => {
+        const { time, date } = data;
+        document.querySelectorAll('.live-time').forEach(el => el.textContent = time);
+        document.querySelectorAll('.live-date').forEach(el => el.textContent = date);
+    };
+})();
+</script>
