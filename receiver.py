@@ -336,14 +336,18 @@ def config_endpoint():
 def fetch_on_startup():
     """Fetch fresh data when receiver starts"""
     import subprocess
+    import os
     try:
         logger.info("Fetching data on startup...")
+        env = os.environ.copy()
+        env['PATH'] = env.get('PATH', '') + ':/home/ccampos/bin:/usr/local/bin'
         result = subprocess.run(
             ['python3', 'fetch_data.py'],
             cwd=os.path.dirname(__file__),
             capture_output=True,
             text=True,
-            timeout=30
+            timeout=30,
+            env=env
         )
         if result.returncode == 0:
             logger.info("Startup data fetch successful")
