@@ -316,3 +316,26 @@ def config_endpoint():
         save_config(config)
         return jsonify({"success": True, "config": config})
     return jsonify(config)
+
+# Fetch data on startup
+def fetch_on_startup():
+    """Fetch fresh data when receiver starts"""
+    import subprocess
+    try:
+        logger.info("Fetching data on startup...")
+        result = subprocess.run(
+            ['python3', 'fetch_data.py'],
+            cwd=os.path.dirname(__file__),
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        if result.returncode == 0:
+            logger.info("Startup data fetch successful")
+        else:
+            logger.error(f"Startup fetch failed: {result.stderr}")
+    except Exception as e:
+        logger.error(f"Error fetching on startup: {e}")
+
+if __name__ == "__main__":
+    fetch_on_startup()
