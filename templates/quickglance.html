@@ -1,4 +1,12 @@
 {# Quick Glance Mode #}
+{# Defensive: ensure state.content is a dict #}
+{% set content = {} %}
+{% if state.content is mapping %}
+    {% set content = state.content %}
+{% elif state.content is iterable and state.content is not string %}
+    {% set content = {} %}
+{% endif %}
+
 {% if config %}
 <style>
 .qg-current-time { font-size: {{ config.font_clock|default('5rem') }}; }
@@ -14,43 +22,43 @@
 <div class="quick-glance animate-in">
     <div class="qg-left-col">
         <div class="qg-time-block">
-            <div class="qg-current-time live-time">{{ state.content.time }}</div>
-            <span class="qg-countdown {% if state.content.countdown_urgency == 'critical' %}critical{% elif state.content.countdown_urgency == 'urgent' %}warning{% endif %}">
-                {% if state.content.countdown %}{{ state.content.countdown }}{% endif %}
-                {% if state.content.countdown_label %} ({{ state.content.countdown_label }}){% endif %}
+            <div class="qg-current-time live-time">{{ content.time }}</div>
+            <span class="qg-countdown {% if content.countdown_urgency == 'critical' %}critical{% elif content.countdown_urgency == 'urgent' %}warning{% endif %}">
+                {% if content.countdown %}{{ content.countdown }}{% endif %}
+                {% if content.countdown_label %} ({{ content.countdown_label }}){% endif %}
             </span>
-            <div class="qg-date live-date">{{ state.content.date }}</div>
+            <div class="qg-date live-date">{{ content.date }}</div>
         </div>
         <div class="qg-current-event">
             <span class="qg-label">NOW</span>
-            <span class="qg-event-name">{{ state.content.current_event if state.content.current_event else "Free Time" }}</span>
-            {% if state.content.current_event_time %}
-            <span class="qg-event-time">ends {{ state.content.current_event_time }}</span>
+            <span class="qg-event-name">{{ content.current_event if content.current_event else "Free Time" }}</span>
+            {% if content.current_event_time %}
+            <span class="qg-event-time">ends {{ content.current_event_time }}</span>
             {% endif %}
         </div>
         <div class="qg-next-event">
             <span class="qg-label">NEXT</span>
-            <span class="qg-event-name">{{ state.content.next_event if state.content.next_event else "Nothing scheduled" }}</span>
-            {% if state.content.next_event_time %}
-            <span class="qg-event-time">{{ state.content.next_event_time }}</span>
+            <span class="qg-event-name">{{ content.next_event if content.next_event else "Nothing scheduled" }}</span>
+            {% if content.next_event_time %}
+            <span class="qg-event-time">{{ content.next_event_time }}</span>
             {% endif %}
         </div>
     </div>
     
     <div class="qg-right-col">
         <div class="qg-weather-block">
-            <span class="qg-weather-icon">{{ state.content.weather_icon }}</span>
-            <span class="qg-weather-temp">{{ state.content.weather_temp }}</span>
-            <span class="qg-weather-highlow">{{ state.content.weather_high }}° / {{ state.content.weather_low }}°</span>
+            <span class="qg-weather-icon">{{ content.weather_icon }}</span>
+            <span class="qg-weather-temp">{{ content.weather_temp }}</span>
+            <span class="qg-weather-highlow">{{ content.weather_high }}° / {{ content.weather_low }}°</span>
         </div>
         <div class="qg-dinner">
             <span class="qg-label">DINNER</span>
-            <span class="qg-dinner-text">{{ state.content.dinner if state.content.dinner else "TBD" }}</span>
+            <span class="qg-dinner-text">{{ content.dinner if content.dinner else "TBD" }}</span>
         </div>
         <div class="qg-tasks-block">
             <span class="qg-label">TASKS</span>
             <div class="qg-tasks-list">
-                {% set tasks = state.content.get('tasks', []) if state.content else [] %}
+                {% set tasks = content.tasks if content.tasks is defined else [] %}
                 {% for task in tasks[:5] %}
                 <div class="task-item">
                     <span class="task-name">{{ task.name }}</span>

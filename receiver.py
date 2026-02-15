@@ -103,10 +103,16 @@ def update():
     if not data:
         return jsonify({"error": "No data provided"}), 400
     
+    # Defensive: ensure content is always a dict
+    content = data.get("content", {})
+    if not isinstance(content, dict):
+        logger.warning(f"Content is not a dict: {type(content)}, resetting to empty dict")
+        content = {}
+    
     display_state = {
         "mode": data.get("mode", "custom"),
         "title": data.get("title", "Dobby Display"),
-        "content": data.get("content", {}),
+        "content": content,
         "updated": datetime.now().isoformat()
     }
     
