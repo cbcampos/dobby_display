@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, timezone
 import yaml
 
 # Config
-DISPLAY_URL = os.environ.get("DOBBY_DISPLAY_URL", "http://100.95.129.14:5000")
+DISPLAY_URL = os.environ.get("DOBBY_DISPLAY_URL", "http://100.119.55.47:5000")
 TODOIST_TOKEN = os.environ.get("TODOIST_API_TOKEN", "79267f117496088bbc215416cb4c355893432553")
 CONFIG_DIR = os.path.dirname(os.path.abspath(__file__))
 
