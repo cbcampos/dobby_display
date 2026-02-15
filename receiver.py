@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 # In-memory storage for current display state
 display_state = {
-    "mode": "dashboard",  # dashboard, run, meals, routine, custom
-    "title": "Family Dashboard",
+    "mode": "quickglance",  # dashboard, run, meals, routine, custom, quickglance
+    "title": "Quick Look",
     "content": {},
     "updated": None
 }
