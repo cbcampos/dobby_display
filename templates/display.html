@@ -281,11 +281,24 @@
                 .then(data => {
                     if (data.updated !== lastUpdated) {
                         lastUpdated = data.updated;
+                        // Check for speech
+                        if (data.speak) {
+                            speak(data.speak);
+                        }
                         location.reload();
                     }
                 })
                 .catch(console.error);
         }, 10000);
+        
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                const msg = new SpeechSynthesisUtterance(text);
+                msg.rate = 1;
+                msg.pitch = 1;
+                window.speechSynthesis.speak(msg);
+            }
+        }
     </script>
 </body>
 </html>

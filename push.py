@@ -11,7 +11,7 @@ import sys
 import os
 
 # Default URL - should be overridden via config or environment
-DEFAULT_URL = os.environ.get("DOBBY_DISPLAY_URL", "http://100.105.30.20:5000")
+DEFAULT_URL = os.environ.get("DOBBY_DISPLAY_URL", "http://100.95.129.14:5000")
 
 def push_dashboard():
     """Reset to dashboard mode"""
@@ -51,12 +51,13 @@ def push_routine(steps: list):
     r = requests.post(f"{DEFAULT_URL}/api/update", json=payload)
     return r.json()
 
-def push_custom(title: str, text: str):
+def push_custom(title: str, text: str, speak: str = None):
     """Show custom content"""
     payload = {
         "mode": "custom",
         "title": title,
-        "content": {"text": text}
+        "content": {"text": text},
+        "speak": speak
     }
     r = requests.post(f"{DEFAULT_URL}/api/update", json=payload)
     try:
@@ -167,6 +168,7 @@ def main():
     parser.add_argument("--mode", required=True, choices=["dashboard", "run", "meals", "routine", "custom", "quickglance"])
     parser.add_argument("--data", help="JSON data for the content")
     parser.add_argument("--title", help="Title for custom mode")
+    parser.add_argument("--speak", help="Text to speak aloud")
     
     args = parser.parse_args()
     
@@ -188,7 +190,7 @@ def main():
             data = json.loads(args.data) if args.data else {}
             result = push_quickglance(data)
         elif args.mode == "custom":
-            result = push_custom(args.title or "Dobby", args.data or "Hello!")
+            result = push_custom(args.title or "Dobby", args.data or "Hello!", args.speak)
         
         print(json.dumps(result, indent=2))
     except Exception as e:

@@ -13,7 +13,7 @@ from datetime import datetime, timedelta, timezone
 import yaml
 
 # Config
-DISPLAY_URL = os.environ.get("DOBBY_DISPLAY_URL", "http://100.105.30.20:5000")
+DISPLAY_URL = os.environ.get("DOBBY_DISPLAY_URL", "http://100.95.129.14:5000")
 TODOIST_TOKEN = os.environ.get("TODOIST_API_TOKEN", "79267f117496088bbc215416cb4c355893432553")
 CONFIG_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -97,6 +97,9 @@ def get_routine_countdown():
                 diff = leave_time - now
                 hours = diff.seconds // 3600
                 mins = (diff.seconds % 3600) // 60
+                # Only show countdown if within 2 hours (otherwise it's not useful)
+                if hours >= 2:
+                    return "", "", ""
                 if hours > 0:
                     countdown = f"{hours}h {mins}m"
                 else:
@@ -249,11 +252,14 @@ def build_quickglance():
                     diff = leave_time - now
                     hours = diff.seconds // 3600
                     mins = (diff.seconds % 3600) // 60
+                    # Only show countdown if within 2 hours (otherwise not useful)
+                    if hours >= 2:
+                        continue
                     if hours > 0:
                         countdown = f"{hours}h {mins}m"
                     else:
                         countdown = f"{mins}m"
-                    countdown_label = f"Leave (9:45)"
+                    countdown_label = f"Leave ({leave_time.strftime('%-I:%M')})"
                     
                     # Calculate urgency
                     total_mins = hours * 60 + mins
