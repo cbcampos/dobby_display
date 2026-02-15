@@ -40,11 +40,15 @@
         <div class="qg-weather-block">
             <span class="qg-weather-icon">{{ state.content.weather_icon }}</span>
             <span class="qg-weather-temp">{{ state.content.weather_temp }}</span>
-            <span class="qg-weather-highlow">HIGH {{ state.content.weather_high }}° / LOW {{ state.content.weather_low }}°</span>
+            <span class="qg-weather-highlow">{{ state.content.weather_high }}° / {{ state.content.weather_low }}°</span>
         </div>
         <div class="qg-dinner">
             <span class="qg-label">DINNER</span>
             <span class="qg-dinner-text">{{ state.content.dinner if state.content.dinner else "TBD" }}</span>
+        </div>
+        <div class="qg-tasks-block">
+            <span class="qg-label">TASKS</span>
+            <div class="qg-tasks-list">{{ state.content.tasks if state.content.tasks else "No tasks" }}</div>
         </div>
     </div>
 </div>
@@ -73,7 +77,7 @@
 .qg-right-col {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 12px;
 }
 
 .qg-header {
@@ -140,41 +144,45 @@
 }
 
 .qg-weather-block {
-    padding: 20px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 12px;
-    text-align: center;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
 .qg-weather-icon {
-    display: block;
-    font-size: 3rem;
-    margin-bottom: 5px;
+    font-size: 2rem;
 }
 
 .qg-weather-temp {
-    display: block;
-    font-size: 2.8rem;
+    font-size: 2rem;
     font-weight: 700;
     color: #fff;
 }
 
 .qg-weather-highlow {
-    display: block;
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: rgba(255,255,255,0.5);
-    margin-top: 5px;
 }
 
 .qg-dinner {
-    padding: 20px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 12px;
-    text-align: center;
-    flex: 1;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    text-align: left;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.qg-dinner .qg-label {
+    color: #ffd700;
+    margin-bottom: 0;
+    flex-shrink: 0;
 }
 
 .qg-dinner .qg-label {
@@ -182,10 +190,27 @@
 }
 
 .qg-dinner-text {
-    font-size: 2rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: #fff;
-    margin-top: 8px;
+}
+
+.qg-tasks-block {
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    text-align: left;
+}
+
+.qg-tasks-block .qg-label {
+    color: #ffd700;
+    margin-bottom: 8px;
+}
+
+.qg-tasks-list {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.5;
 }
 </style>
 
