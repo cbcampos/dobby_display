@@ -269,40 +269,8 @@ def build_quickglance():
     # Get routine countdown
     countdown, countdown_label, countdown_routine = get_routine_countdown()
     
-    # Calculate urgency
-    
-    countdown = ""
-    countdown_label = ""
-    urgency = "safe"
-    if next_event:
-        for event in events:
-            start = event.get("start", {}).get("dateTime", "")
-            event_start = parse_event_time(start)
-            if event_start and event_start > now:
-                # Countdown is 15 minutes before event
-                leave_time = event_start - timedelta(minutes=15)
-                if leave_time > now:
-                    diff = leave_time - now
-                    hours = diff.seconds // 3600
-                    mins = (diff.seconds % 3600) // 60
-                    # Only show countdown if within 2 hours (otherwise not useful)
-                    if hours >= 2:
-                        continue
-                    if hours > 0:
-                        countdown = f"{hours}h {mins}m"
-                    else:
-                        countdown = f"{mins}m"
-                    countdown_label = f"Leave ({leave_time.strftime('%-I:%M')})"
-                    
-                    # Calculate urgency
-                    total_mins = hours * 60 + mins
-                    if total_mins <= 15:
-                        urgency = "urgent"
-                    elif total_mins <= 30:
-                        urgency = "caution"
-                    elif total_mins <= 60:
-                        urgency = "warning"
-                break
+    # Only show countdown for Church/School/Bedtime - skip fallback for other events
+    # If routine returned nothing, don't show countdown for regular events
     
     # Calculate urgency
     urgency = "safe"
