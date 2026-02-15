@@ -153,6 +153,14 @@ def push_alert(message: str, severity: str = "info", title: str = "", details: l
     r = requests.post(f"{DEFAULT_URL}/api/update", json=payload)
     return r.json()
 
+def push_template(template_name: str, content: str):
+    """Update a template file on the display"""
+    r = requests.post(f"{DEFAULT_URL}/api/template/{template_name}", json={"content": content})
+    try:
+        return r.json()
+    except:
+        return {"success": True, "raw": r.text}
+
 def main():
     parser = argparse.ArgumentParser(description="Push content to Dobby Display")
     parser.add_argument("--url", default=DEFAULT_URL, help="Display receiver URL")

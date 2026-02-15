@@ -68,6 +68,19 @@ def clear():
     """Clear display back to dashboard"""
     return dashboard()
 
+@app.route('/api/template/<template_name>', methods=['POST'])
+def update_template(template_name):
+    """Update a template file directly"""
+    import os
+    content = request.json.get('content', '')
+    safe_name = os.path.basename(template_name)
+    if not safe_name.endswith('.html'):
+        safe_name += '.html'
+    template_path = os.path.join(os.path.dirname(__file__), 'templates', safe_name)
+    with open(template_path, 'w') as f:
+        f.write(content)
+    return jsonify({"success": True, "template": safe_name})
+
 @app.route('/health')
 def health():
     """Health check endpoint"""
