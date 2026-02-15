@@ -170,7 +170,6 @@ def send_message():
         countdown_to = data.get("countdown_to")
         if countdown_to:
             try:
-                from datetime import datetime
                 target = datetime.fromisoformat(countdown_to.replace('Z', '+00:00'))
                 now = datetime.now(target.tzinfo)
                 delta = target - now
@@ -285,6 +284,22 @@ def clear_message():
     }
     logger.info("Message cleared, returning to quickglance")
     return jsonify({"success": True, "state": display_state})
+
+@app.route('/api/reload-templates', methods=['POST'])
+def reload_templates():
+    """Force reload of Jinja2 templates"""
+    from flask import Flask
+    app.jinja_env.cache.clear()
+    return jsonify({"success": True, "message": "Templates reloaded"})
+
+@app.route('/api/restart', methods=['POST'])
+def restart_receiver():
+    """Restart the receiver (for template updates to take effect)"""
+    import os
+    import subprocess
+    # Spawn new process and exit current
+    subprocess.Popen(['python3', os.path.abspath(__file__)])
+    return jsonify({"success": True, "message": "Restarting..."})
 
 if __name__ == '__main__':
     print("🎬 Dobby Display Receiver starting...")
