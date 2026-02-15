@@ -50,7 +50,8 @@
         <div class="qg-tasks-block">
             <span class="qg-label">TASKS</span>
             <div class="qg-tasks-list">
-                {% for task in state.content['tasks'][:5] %}
+                {% set tasks = state.content.get('tasks', []) if state.content else [] %}
+                {% for task in tasks[:5] %}
                 <div class="task-item">
                     <span class="task-name">{{ task.name }}</span>
                     {% if task.due %}<span class="task-due">{{ task.due }}</span>{% endif %}
