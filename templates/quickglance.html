@@ -1,87 +1,55 @@
-{# Quick Glance Mode - GLASSMORPHIC Design #}
+{# Quick Glance Mode #}
 {% if config %}
 <style>
-.qg-current-time { font-size: {{ config.font_clock|default('4.5rem') }}; }
-.qg-date { font-size: {{ config.font_date|default('1.3rem') }}; }
-.qg-label { font-size: {{ config.font_label|default('1rem') }}; }
-.qg-event-name { font-size: {{ config.font_event|default('2rem') }}; }
-.qg-event-time { font-size: {{ config.font_event_time|default('1.4rem') }}; }
-.qg-weather-icon { font-size: {{ config.font_weather_icon|default('2.8rem') }}; }
-.qg-weather-temp { font-size: {{ config.font_weather_temp|default('2.6rem') }}; }
-.qg-dinner-text { font-size: {{ config.font_dinner|default('1.8rem') }}; }
+.qg-current-time { font-size: {{ config.font_clock|default('5rem') }}; }
+.qg-date { font-size: {{ config.font_date|default('1.4rem') }}; }
+.qg-label { font-size: {{ config.font_label|default('1.1rem') }}; }
+.qg-event-name { font-size: {{ config.font_event|default('2.2rem') }}; }
+.qg-event-time { font-size: {{ config.font_event_time|default('1.6rem') }}; }
+.qg-weather-icon { font-size: {{ config.font_weather_icon|default('3rem') }}; }
+.qg-weather-temp { font-size: {{ config.font_weather_temp|default('2.8rem') }}; }
+.qg-dinner-text { font-size: {{ config.font_dinner|default('2rem') }}; }
 </style>
 {% endif %}
 <div class="quick-glance animate-in">
-    <!-- Starfield Background -->
-    <div class="qg-starfield">
-        <div class="star"></div><div class="star"></div><div class="star"></div>
-        <div class="star"></div><div class="star"></div><div class="star"></div>
-        <div class="star"></div><div class="star"></div><div class="star"></div>
-        <div class="star"></div><div class="star"></div><div class="star"></div>
-        <div class="bokeh bokeh-1"></div>
-        <div class="bokeh bokeh-2"></div>
-        <div class="bokeh bokeh-3"></div>
-    </div>
-    
     <div class="qg-left-col">
-        <!-- Branding removed per user request -->
-        <div class="qg-branding">
-        
-        <!-- Time Block -->
-        <div class="qg-time-block glass-tile">
+        <div class="qg-time-block">
             <div class="qg-current-time live-time">{{ state.content.time }}</div>
-            <span class="qg-countdown-inline {% if state.content.countdown_urgency == 'critical' %}qg-countdown-critical{% elif state.content.countdown_urgency == 'warning' or state.content.countdown_urgency == 'urgent' %}qg-countdown-urgent{% endif %}">
+            <span class="qg-countdown {% if state.content.countdown_urgency == 'critical' %}critical{% elif state.content.countdown_urgency == 'urgent' or state.content.countdown_urgency == 'warning' %}warning{% endif %}">
                 {% if state.content.countdown %}{{ state.content.countdown }}{% endif %}
                 {% if state.content.countdown_label %} ({{ state.content.countdown_label }}){% endif %}
             </span>
             <div class="qg-date live-date">{{ state.content.date }}</div>
         </div>
-        
-        <!-- Current Event -->
-        <div class="qg-current-event glass-tile">
+        <div class="qg-current-event">
             <span class="qg-label">NOW</span>
             <span class="qg-event-name">{{ state.content.current_event if state.content.current_event else "Free Time" }}</span>
             {% if state.content.current_event_time %}
-            <span class="qg-event-time">{{ state.content.current_event_time }}</span>
+            <span class="qg-event-time">ends {{ state.content.current_event_time }}</span>
             {% endif %}
         </div>
-        
-        <!-- Next Event -->
-        <div class="qg-next-event glass-tile">
+        <div class="qg-next-event">
             <span class="qg-label">NEXT</span>
             <span class="qg-event-name">{{ state.content.next_event if state.content.next_event else "Nothing scheduled" }}</span>
             {% if state.content.next_event_time %}
             <span class="qg-event-time">{{ state.content.next_event_time }}</span>
             {% endif %}
         </div>
-        
-        <!-- Dinner -->
-        <div class="qg-dinner glass-tile">
-            <span class="qg-label">DINNER</span>
-            <span class="qg-dinner-text">{{ state.content.dinner if state.content.dinner else "Leftovers" }}</span>
-        </div>
     </div>
     
     <div class="qg-right-col">
-        <!-- Weather Block -->
-        <div class="qg-weather-block glass-tile">
-            <span class="qg-weather-icon">☀️</span>
-            <div class="qg-weather-info">
-                <span class="qg-weather-temp">58°</span>
-                <span class="qg-weather-desc">Sunny</span>
-                <span class="qg-weather-highlow">H: 62° L: 40°</span>
-            </div>
+        <div class="qg-weather-block">
+            <span class="qg-weather-icon">{{ state.content.weather_icon }}</span>
+            <span class="qg-weather-temp">{{ state.content.weather_temp }}</span>
+            <span class="qg-weather-highlow">{{ state.content.weather_high }}° / {{ state.content.weather_low }}°</span>
         </div>
-        
-        <!-- Tasks Block -->
-        <div class="qg-tasks-block glass-tile">
-            <span class="qg-label">FAMILY TASKS</span>
-            <div class="qg-tasks-list">
-                <div class="qg-task-item"><span class="qg-task-dot"></span>Schedule oil change</div>
-                <div class="qg-task-item"><span class="qg-task-dot"></span>Brooke's prescription ready</div>
-                <div class="qg-task-item"><span class="qg-task-dot"></span>Email teacher about field trip</div>
-                <div class="qg-task-item"><span class="qg-task-dot"></span>Order more dog food</div>
-            </div>
+        <div class="qg-dinner">
+            <span class="qg-label">DINNER</span>
+            <span class="qg-dinner-text">{{ state.content.dinner if state.content.dinner else "TBD" }}</span>
+        </div>
+        <div class="qg-tasks-block">
+            <span class="qg-label">TASKS</span>
+            <div class="qg-tasks-list">{{ state.content.tasks if state.content.tasks else "No tasks" }}</div>
         </div>
     </div>
 </div>
@@ -89,248 +57,72 @@
 <style>
 .quick-glance {
     display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 24px;
-    padding: 28px;
+    grid-template-columns: 65% 35%;
+    gap: 20px;
+    padding: 30px;
     height: 100vh;
     box-sizing: border-box;
-    background: linear-gradient(160deg, #0d0221 0%, #1a0a2e 30%, #190531 60%, #0f1a3d 100%);
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     overflow: hidden;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-    position: relative;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Starfield & Bokeh Background */
-.qg-starfield {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 0;
-}
-
-.star {
-    position: absolute;
-    width: 2px;
-    height: 2px;
-    background: #fff;
-    border-radius: 50%;
-    animation: twinkle 3s ease-in-out infinite;
-    opacity: 0.6;
-}
-
-.star:nth-child(1) { top: 8%; left: 12%; animation-delay: 0s; }
-.star:nth-child(2) { top: 15%; left: 45%; animation-delay: 0.5s; }
-.star:nth-child(3) { top: 22%; left: 78%; animation-delay: 1s; }
-.star:nth-child(4) { top: 35%; left: 8%; animation-delay: 1.5s; }
-.star:nth-child(5) { top: 42%; left: 62%; animation-delay: 2s; }
-.star:nth-child(6) { top: 55%; left: 35%; animation-delay: 0.3s; }
-.star:nth-child(7) { top: 65%; left: 85%; animation-delay: 0.8s; }
-.star:nth-child(8) { top: 72%; left: 15%; animation-delay: 1.3s; }
-.star:nth-child(9) { top: 88%; left: 55%; animation-delay: 1.8s; }
-.star:nth-child(10) { top: 5%; left: 90%; animation-delay: 2.3s; }
-.star:nth-child(11) { top: 48%; left: 92%; animation-delay: 0.7s; }
-.star:nth-child(12) { top: 78%; left: 42%; animation-delay: 1.1s; }
-
-@keyframes twinkle {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.5); }
-}
-
-.bokeh {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(60px);
-    opacity: 0.15;
-    animation: float 8s ease-in-out infinite;
-}
-
-.bokeh-1 {
-    width: 300px;
-    height: 300px;
-    background: #7b2cbf;
-    top: 10%;
-    left: 5%;
-    animation-delay: 0s;
-}
-
-.bokeh-2 {
-    width: 250px;
-    height: 250px;
-    background: #3a0ca3;
-    top: 50%;
-    right: 10%;
-    animation-delay: -3s;
-}
-
-.bokeh-3 {
-    width: 200px;
-    height: 200px;
-    background: #4361ee;
-    bottom: 15%;
-    left: 30%;
-    animation-delay: -5s;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-20px) scale(1.1); }
-}
-
-/* Glass Tile Base */
-.glass-tile {
-    background: rgba(20, 30, 60, 0.4);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 220, 255, 0.3);
-    border-radius: 16px;
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1),
-        0 0 20px rgba(0, 220, 255, 0.05);
-}
-
-.glass-tile-cyan {
-    background: rgba(0, 200, 220, 0.25);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(0, 255, 255, 0.5);
-    border-radius: 12px;
-    box-shadow: 
-        0 4px 20px rgba(0, 200, 220, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        0 0 30px rgba(0, 255, 255, 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    padding: 14px 20px;
-}
-
 .qg-left-col {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    position: relative;
-    z-index: 1;
+    gap: 20px;
 }
 
 .qg-right-col {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    position: relative;
-    z-index: 1;
-}
-
-/* Branding */
-.qg-branding {
-    display: flex;
-    align-items: center;
     gap: 12px;
 }
 
-.qg-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, #00d4ff, #0099cc);
-    border-radius: 10px;
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: #0d0221;
-    box-shadow0 20px: 0  rgba(0, 212, 255, 0.5);
+.qg-header {
+    padding: 10px 0;
 }
 
 .qg-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    color: #fff;
-    letter-spacing: 1px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #ffd700;
 }
 
-/* Time Block */
 .qg-time-block {
     text-align: center;
-    padding: 24px 20px;
+    padding: 20px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 16px;
 }
 
 .qg-current-time {
-    font-size: 4.5rem;
+    font-size: 5rem;
     font-weight: 700;
     color: #fff;
     line-height: 1.1;
-    text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
 }
 
 .qg-date {
-    font-size: 1.3rem;
-    color: rgba(255, 255, 255, 0.75);
+    font-size: 1.4rem;
+    color: rgba(255,255,255,0.7);
     margin-top: 8px;
 }
 
-/* Countdown Block */
-.qg-countdown-label {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #0d0221;
-    letter-spacing: 2px;
-}
-
-.qg-countdown-time {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: #0d0221;
-}
-
-/* Inline Countdown (next to time) */
-.qg-countdown-inline {
-    display: block;
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.7);
-    margin-top: 5px;
-}
-
-.qg-countdown-urgent {
-    background: #ffd700;
-    color: #fff;
-    padding: 4px 12px;
-    border-radius: 8px;
-    font-weight: 700;
-}
-
-.qg-countdown-critical {
-    background: #ff4444;
-    color: #fff;
-    padding: 4px 12px;
-    border-radius: 8px;
-    font-weight: 700;
-}
-
-/* Event Tiles */
-.qg-current-event {
+.qg-current-event, .qg-next-event {
     padding: 20px;
-    border-radius: 14px;
-    width: 100%;
-}
-
-.qg-next-event {
-    padding: 16px 20px;
+    background: rgba(255,255,255,0.08);
     border-radius: 12px;
-    width: 100%;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .qg-label {
     display: block;
-    font-size: 1rem;
+    font-size: 1.1rem;
     text-transform: uppercase;
     letter-spacing: 3px;
     color: #ffd700;
@@ -340,109 +132,112 @@
 
 .qg-event-name {
     display: block;
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 600;
     color: #fff;
 }
 
 .qg-event-time {
     display: block;
-    font-size: 1.4rem;
-    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.6rem;
+    color: rgba(255,255,255,0.6);
     margin-top: 4px;
 }
 
-/* Dinner */
-.qg-dinner {
-    padding: 16px 20px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.qg-dinner .qg-label {
-    margin-bottom: 0;
-    white-space: nowrap;
-}
-
-.qg-dinner-text {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #fff;
-}
-
-/* Weather Block */
 .qg-weather-block {
-    padding: 20px;
-    border-radius: 14px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    text-align: left;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
 }
 
 .qg-weather-icon {
-    font-size: 2.8rem;
-    filter: drop-shadow(0 0 10px rgba(255, 200, 0, 0.5));
-}
-
-.qg-weather-info {
-    display: flex;
-    flex-direction: column;
+    font-size: 2rem;
 }
 
 .qg-weather-temp {
-    font-size: 2.6rem;
+    font-size: 2rem;
     font-weight: 700;
     color: #fff;
 }
 
-.qg-weather-desc {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 500;
-}
-
 .qg-weather-highlow {
-    font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.5);
-    margin-top: 2px;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.5);
 }
 
-/* Tasks Block */
+.qg-dinner {
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+.qg-dinner .qg-label {
+    color: #ffd700;
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+.qg-dinner .qg-label {
+    color: #ffd700;
+}
+
+.qg-dinner-text {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #fff;
+}
+
 .qg-tasks-block {
-    padding: 20px;
-    border-radius: 14px;
-    flex: 1;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 8px;
+    text-align: left;
 }
 
 .qg-tasks-block .qg-label {
-    margin-bottom: 14px;
+    color: #ffd700;
+    margin-bottom: 8px;
 }
 
 .qg-tasks-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.qg-task-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
     font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(255,255,255,0.8);
+    line-height: 1.5;
 }
 
-.qg-task-dot {
-    width: 10px;
-    height: 10px;
-    background: #e040fb;
-    border-radius: 50%;
-    box-shadow: 
-        0 0 10px rgba(224, 64, 251, 0.8),
-        0 0 20px rgba(224, 64, 251, 0.4);
-    flex-shrink: 0;
+/* Countdown inline */
+.qg-countdown {
+    display: block;
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 5px;
+}
+
+.qg-countdown.warning {
+    background: #ffd700;
+    color: #000;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    display: inline-block;
+}
+
+.qg-countdown.critical {
+    background: #ff4444;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    display: inline-block;
 }
 </style>
 
@@ -453,7 +248,7 @@
             const now = new Date();
             return {
                 time: now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }),
-                date: now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })
+                date: now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
             };
         }
         postMessage(formatTime());
