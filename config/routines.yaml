@@ -1,30 +1,30 @@
 # Dobby Display Routines Configuration
 # Define countdown routines with their triggers and settings
+# Only shows countdowns for: Church (Sundays), School pickup (weekdays), Bedtime (8pm daily)
 
 routines:
-  # Church - Sundays at 10am, 15 min before
+  # Church - Sundays at 10am, show countdown 15 min before
   - name: "Church"
     trigger_calendar: "Me and You"
     trigger_event_contains: "Church"
-    trigger_days: [0]  # Sunday (0 = Sunday in Python)
+    trigger_days: [0]  # Sunday
     event_time: "10:00"
     leave_minutes_before: 15
     enabled: true
 
-  # Take Franklin to school - weekday mornings, check for "Take Franklin" or "Chris: Take Franklin to School" event
-  - name: "Franklin to School"
+  # Take Franklin to school - weekday mornings
+  - name: "School"
     trigger_calendar: "Me and You"
     trigger_event_contains: "Take Franklin"
     trigger_days: [1, 2, 3, 4, 5]  # Mon-Fri
-    # Event time comes from the calendar event itself
     leave_minutes_before: 15
     enabled: true
 
-  # Custom bedtime routine - if "Bedtime" event exists
+  # Bedtime - every day at 8:00 PM
   - name: "Bedtime"
-    trigger_calendar: "Me and You"
+    trigger_calendar: "Personal"
     trigger_event_contains: "Bedtime"
     trigger_days: [0, 1, 2, 3, 4, 5, 6]  # Every day
-    event_time: "20:30"  # 8:30 PM default
-    leave_minutes_before: 30
-    enabled: false  # Disabled by default
+    event_time: "20:00"  # 8:00 PM
+    leave_minutes_before: 0  # Show at bedtime, not "leave" time
+    enabled: true

@@ -91,9 +91,13 @@ def get_routine_countdown():
                             else:
                                 countdown = f"{mins}m"
                             
-                            # Format leave time
-                            leave_str = leave_time.strftime("%-I:%M")
-                            return countdown, f"Leave ({leave_str})", routine.get("name", "Event")
+                            # Check if this is bedtime (leave_minutes_before = 0)
+                            if routine.get("leave_minutes_before", 15) == 0:
+                                return countdown, routine.get("name", "Event"), routine.get("name", "Event")
+                            else:
+                                # Format leave time
+                                leave_str = leave_time.strftime("%-I:%M")
+                                return countdown, f"Leave ({leave_str})", routine.get("name", "Event")
         
         # Check if we have a default time for this routine
         default_time = routine.get("event_time", "")
@@ -113,8 +117,13 @@ def get_routine_countdown():
                     countdown = f"{hours}h {mins}m"
                 else:
                     countdown = f"{mins}m"
-                leave_str = leave_time.strftime("%-I:%M")
-                return countdown, f"Leave ({leave_str})", routine.get("name", "Event")
+                
+                # Check if this is bedtime (leave_minutes_before = 0)
+                if routine.get("leave_minutes_before", 15) == 0:
+                    return countdown, routine.get("name", "Event"), routine.get("name", "Event")
+                else:
+                    leave_str = leave_time.strftime("%-I:%M")
+                    return countdown, f"Leave ({leave_str})", routine.get("name", "Event")
     
     return "", "", ""
 
