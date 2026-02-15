@@ -288,10 +288,24 @@
         }
         document.getElementById('friendly-updated').textContent = 'Updated ' + formatFriendlyTime('{{ state.updated }}');
         
-        // Auto-refresh every 10 seconds to check for updates (skip in message mode)
+        // Auto-refresh every 10 seconds to check for updates (skip in message mode unless it's a countdown)
         let lastUpdated = '{{ state.updated }}';
         const isMessageMode = '{{ state.mode }}' === 'message';
-        if (!isMessageMode) {
+        const hasAutoDismiss = {{ state.content.auto_dismiss|default(0) }};
+        const isSticky = {{ 'true' if state.content.sticky else 'false' }};
+        
+        // Don't auto-refresh if we have an active message with auto-dismiss or sticky
+        if (isMessageMode && (hasAutoDismiss > 0 || isSticky)) {
+            // Just update timestamp, don't reload
+            setInterval(() => {
+                fetch('/api/status')
+                    .then(r => r.json())
+                    .then(data => {
+                        document.getElementById('friendly-updated').textContent = 'Updated ' + formatFriendlyTime(data.updated);
+                    })
+                    .catch(console.error);
+            }, 10000);
+        } else if (!isMessageMode) {
             setInterval(() => {
                 fetch('/api/status')
                     .then(r => r.json())
@@ -309,7 +323,6 @@
                     .catch(console.error);
             }, 10000);
         }
-        }, 10000);
         
         function speak(text) {
             if ('speechSynthesis' in window) {

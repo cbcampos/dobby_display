@@ -24,12 +24,29 @@
             <div class="countdown-label">min</div>
         </div>
         {% endif %}
+        
+        {% if state.content.seconds is defined %}
+        <div class="countdown-unit">
+            <div class="countdown-number">{{ state.content.seconds }}</div>
+            <div class="countdown-label">sec</div>
+        </div>
+        {% endif %}
     </div>
     
     {% if state.content.message %}
     <div class="countdown-message">{{ state.content.message }}</div>
     {% endif %}
 </div>
+
+{% if state.content.auto_dismiss and state.content.auto_dismiss > 0 %}
+<div class="auto-dismiss">Returning in {{ state.content.auto_dismiss }} seconds...</div>
+<script>
+    sessionStorage.setItem('message_dismiss_at', Date.now() + {{ state.content.auto_dismiss }} * 1000);
+    setTimeout(() => {
+        window.location.href = '/api/clear-message';
+    }, {{ state.content.auto_dismiss }} * 1000);
+</script>
+{% endif %}
 
 <style>
 .countdown {

@@ -141,21 +141,148 @@ def health():
 
 @app.route('/api/message', methods=['POST'])
 def send_message():
-    """Send a fullscreen message"""
+    """Send a fullscreen message with various types and styling options
+    
+    Request body (JSON):
+    {
+        "message": "Main message text",
+        "sub_message": "Optional subtitle",
+        "type": "info|warning|alert|celebration|countdown|sticky",  # default: info
+        "font_size": "4rem",  # main message font size
+        "sub_size": "2rem",   # subtitle font size
+        "auto_dismiss": 0,   # seconds until auto-return to quickglance (0=stay forever)
+        "countdown_to": "2025-01-15T10:00:00",  # ISO datetime for countdown
+        "countdown_label": "Church",  # label for countdown event
+        "sticky": false,  # if true, stays until manually cleared
+        "color": "#667eea"  # optional custom color
+    }
+    """
     global display_state
     data = request.json or {}
-    display_state = {
-        "mode": "message",
-        "title": "Message",
-        "content": {
+    
+    message_type = data.get("type", "info")
+    auto_dismiss = int(data.get("auto_dismiss", 0))
+    sticky = data.get("sticky", False)
+    
+    # Handle countdown type - calculate time remaining
+    if message_type == "countdown":
+        countdown_to = data.get("countdown_to")
+        if countdown_to:
+            try:
+                from datetime import datetime
+                target = datetime.fromisoformat(countdown_to.replace('Z', '+00:00'))
+                now = datetime.now(target.tzinfo)
+                delta = target - now
+                
+                if delta.total_seconds() > 0:
+                    days = delta.days
+                    hours, remainder = divmod(delta.seconds, 3600)
+                    minutes, seconds = divmod(remainder, 60)
+                    
+                    data["content"] = {
+                        "days": days if days > 0 else None,
+                        "hours": hours,
+                        "minutes": minutes,
+                        "seconds": seconds,
+                        "event": data.get("countdown_label", "Event"),
+                        "message": data.get("message", ""),
+                        "type": "countdown"
+                    }
+                else:
+                    data["message"] = "Event has passed!"
+                    message_type = "info"
+            except Exception as e:
+                logger.error(f"Countdown parse error: {e}")
+                data["message"] = "Invalid countdown time"
+                message_type = "info"
+    
+    # Determine display mode based on type
+    mode_map = {
+        "celebration": "celebration",
+        "countdown": "countdown", 
+        "alert": "alert",
+        "warning": "message",  # Use message mode with warning styling
+    }
+    
+    display_mode = mode_map.get(message_type, "message")
+    
+    # Build content based on mode
+    if display_mode == "message":
+        content = {
             "message": data.get("message", ""),
             "sub_message": data.get("sub_message", ""),
             "font_size": data.get("font_size", "4rem"),
             "sub_size": data.get("sub_size", "2rem"),
-            "auto_dismiss": data.get("auto_dismiss", 0)  # 0 = stay forever
-        },
+            "auto_dismiss": auto_dismiss,
+            "type": message_type,
+            "color": data.get("color", get_type_color(message_type)),
+            "sticky": sticky
+        }
+    elif display_mode == "countdown":
+        content = data.get("content", {})
+        content["type"] = "countdown"
+        content["auto_dismiss"] = auto_dismiss
+    elif display_mode == "celebration":
+        content = {
+            "title": data.get("title", "Celebration!"),
+            "name": data.get("message", ""),
+            "icon": data.get("icon", "🎉"),
+            "message": data.get("sub_message", ""),
+            "type": "celebration",
+            "auto_dismiss": auto_dismiss
+        }
+    elif display_mode == "alert":
+        content = {
+            "title": data.get("title", "Alert"),
+            "message": data.get("message", ""),
+            "severity": message_type,  # warning, severe, info
+            "details": data.get("details", []),
+            "action": data.get("action", ""),
+            "type": "alert",
+            "auto_dismiss": auto_dismiss
+        }
+    else:
+        content = {
+            "message": data.get("message", ""),
+            "sub_message": data.get("sub_message", ""),
+            "type": message_type,
+            "auto_dismiss": auto_dismiss
+        }
+    
+    display_state = {
+        "mode": display_mode,
+        "title": data.get("title", "Message"),
+        "content": content,
         "updated": datetime.now().isoformat()
     }
+    
+    logger.info(f"Message sent: type={message_type}, sticky={sticky}, auto_dismiss={auto_dismiss}")
+    return jsonify({"success": True, "state": display_state})
+
+
+def get_type_color(message_type):
+    """Get the default color for a message type"""
+    colors = {
+        "info": "#667eea",      # Purple/blue
+        "warning": "#ffa502",   # Orange
+        "alert": "#ff4757",     # Red
+        "celebration": "#f093fb",  # Pink
+        "sticky": "#2ed573",    # Green
+    }
+    return colors.get(message_type, "#667eea")
+
+
+@app.route('/api/clear-message', methods=['POST'])
+def clear_message():
+    """Clear the current message and return to quickglance"""
+    global display_state
+    display_state = {
+        "mode": "quickglance",
+        "title": "Quick Look",
+        "content": {},
+        "updated": datetime.now().isoformat()
+    }
+    logger.info("Message cleared, returning to quickglance")
     return jsonify({"success": True, "state": display_state})
 
 if __name__ == '__main__':

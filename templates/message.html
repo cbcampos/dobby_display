@@ -1,6 +1,14 @@
 <style>
+    {% set bg_gradient = {
+        'info': 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+        'warning': 'linear-gradient(135deg, #2d1f1f 0%, #3d2314 50%, #4a2c0a 100%)',
+        'alert': 'linear-gradient(135deg, #2e1a1a 0%, #3e0f0f 50%, #4a0a0a 100%)',
+        'celebration': 'linear-gradient(135deg, #1a1a2e 0%, #2d1f3d 50%, #3d1452 100%)',
+        'sticky': 'linear-gradient(135deg, #1a2e1a 0%, #0f3d0f 50%, #0a2a0a 100%)'
+    } %}
+    
     body.message-mode { 
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        background: {{ bg_gradient.get(state.content.type, bg_gradient['info']) }};
     }
     body.message-mode .content {
         display: flex;
@@ -27,6 +35,47 @@
         margin-top: 20px;
         animation: msgFadeIn 1s ease-out 0.3s both;
     }
+    
+    /* Type-specific styling */
+    body.message-mode.type-warning .message-text {
+        color: #ffa502;
+    }
+    body.message-mode.type-alert .message-text {
+        color: #ff4757;
+    }
+    body.message-mode.type-celebration .message-text {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    body.message-mode.type-sticky .message-text {
+        color: #2ed573;
+    }
+    
+    /* Icon display */
+    body.message-mode .type-icon {
+        font-size: 6rem;
+        margin-bottom: 20px;
+        animation: msgFadeIn 0.5s ease-out;
+    }
+    
+    /* Sticky badge */
+    body.message-mode .sticky-badge {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(46, 213, 115, 0.2);
+        color: #2ed573;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    
     @keyframes msgFadeIn {
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
@@ -39,17 +88,84 @@
         font-size: 1rem;
         color: rgba(255,255,255,0.3);
     }
+    
+    /* Progress bar for auto-dismiss */
+    body.message-mode .dismiss-progress {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        height: 4px;
+        background: {{ state.content.color|default('#667eea') }};
+        transition: width linear;
+    }
 </style>
 
-<div class="message-container">
-    <div class="message-text">{{ state.content.message }}</div>
-    {% if state.content.sub_message %}
-    <div class="message-sub">{{ state.content.sub_message }}</div>
+{% set type_icons = {
+    'info': '💬',
+    'warning': '⚠️',
+    'alert': '🚨',
+    'celebration': '🎉',
+    'sticky': '📌'
+} %}
+
+<body class="message-mode type-{{ state.content.type|default('info') }}">
+    {% if state.content.sticky %}
+    <div class="sticky-badge">📌 Sticky Message</div>
     {% endif %}
-</div>
-{% if state.content.auto_dismiss %}
-<div class="auto-dismiss">Returning in {{ state.content.auto_dismiss }} seconds...</div>
-<script>
-    setTimeout(() => { window.location.href = '/'; }, {{ state.content.auto_dismiss }} * 1000);
-</script>
-{% endif %}
+    
+    <div class="message-container">
+        {% if type_icons.get(state.content.type) %}
+        <div class="type-icon">{{ type_icons[state.content.type] }}</div>
+        {% endif %}
+        
+        <div class="message-text">{{ state.content.message }}</div>
+        
+        {% if state.content.sub_message %}
+        <div class="message-sub">{{ state.content.sub_message }}</div>
+        {% endif %}
+    </div>
+    
+    {% if state.content.auto_dismiss and state.content.auto_dismiss > 0 %}
+    {% if not state.content.sticky %}
+    <div class="auto-dismiss">Returning in {{ state.content.auto_dismiss }} seconds...</div>
+    <div class="dismiss-progress" style="width: 100%; animation: dismissTimer {{ state.content.auto_dismiss }}s linear forwards;"></div>
+    <script>
+        // Store the dismiss time so refresh doesn't reset it
+        sessionStorage.setItem('message_dismiss_at', Date.now() + {{ state.content.auto_dismiss }} * 1000);
+        
+        function checkDismiss() {
+            const dismissAt = sessionStorage.getItem('message_dismiss_at');
+            if (dismissAt) {
+                const remaining = parseInt(dismissAt) - Date.now();
+                if (remaining <= 0) {
+                    sessionStorage.removeItem('message_dismiss_at');
+                    window.location.href = '/api/clear-message';
+                } else {
+                    // Update progress bar
+                    const progress = document.querySelector('.dismiss-progress');
+                    if (progress) {
+                        const total = {{ state.content.auto_dismiss }} * 1000;
+                        progress.style.width = (remaining / total * 100) + '%';
+                    }
+                    setTimeout(checkDismiss, 100);
+                }
+            }
+        }
+        
+        // Check if we already passed the dismiss time on page load
+        const dismissAt = sessionStorage.getItem('message_dismiss_at');
+        if (dismissAt && parseInt(dismissAt) - Date.now() <= 0) {
+            window.location.href = '/api/clear-message';
+        } else {
+            checkDismiss();
+        }
+    </script>
+    <style>
+        @keyframes dismissTimer {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+    </style>
+    {% endif %}
+    {% endif %}
+</body>
