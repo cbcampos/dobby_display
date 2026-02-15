@@ -236,12 +236,15 @@ def build_quickglance():
     
     for event in events:
         start = event.get("start", {}).get("dateTime", "")
+        end = event.get("end", {}).get("dateTime", "")
         event_start = parse_event_time(start)
+        event_end = parse_event_time(end) if end else None
         
-        if event_start:
-            if event_start <= now:
+        if event_start and event_start <= now:
+            # Check if event hasn't ended yet
+            if not event_end or event_end > now:
                 current_event = event.get("summary", "Event")
-            elif not next_event:
+        elif not next_event and event_start and event_start > now:
                 next_event = event.get("summary", "Event")
                 next_event_time = event_start.strftime("%-I:%M %p")
                 next_location = event.get("location", "")
