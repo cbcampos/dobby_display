@@ -32,6 +32,16 @@ def status():
     """Return current display state"""
     return jsonify(display_state)
 
+@app.route('/api/refresh', methods=['POST'])
+def refresh():
+    """Refresh data from external sources"""
+    global display_state
+    
+    # This would normally call external APIs
+    # For now, just update the timestamp
+    display_state["updated"] = datetime.now().isoformat()
+    return jsonify({"success": True, "state": display_state})
+
 @app.route('/api/update', methods=['POST'])
 def update():
     """Update the display content"""

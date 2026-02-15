@@ -273,19 +273,19 @@
     </div>
     
     <script>
-        // Auto-refresh every 30 seconds to check for updates
+        // Auto-refresh every 10 seconds to check for updates
+        let lastUpdated = '{{ state.updated }}';
         setInterval(() => {
             fetch('/api/status')
                 .then(r => r.json())
                 .then(data => {
-                    // Force re-render by reloading if mode changed
-                    const currentMode = '{{ state.mode }}';
-                    if (data.mode !== currentMode) {
+                    if (data.updated !== lastUpdated) {
+                        lastUpdated = data.updated;
                         location.reload();
                     }
                 })
                 .catch(console.error);
-        }, 30000);
+        }, 10000);
     </script>
 </body>
 </html>

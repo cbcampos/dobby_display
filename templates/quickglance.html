@@ -1,29 +1,38 @@
 {# Quick Glance Mode #}
 <div class="quick-glance animate-in">
-    <div class="qg-top">
-        <div class="qg-time-block">
-            <div class="qg-current-time">{{ state.content.time }}</div>
-            <div class="qg-date">{{ state.content.date }}</div>
+    <div class="qg-left-col">
+        {% if state.content.countdown_urgency == 'urgent' %}
+        {# URGENT MODE - Countdown dominates #}
+        <div class="qg-urgent-banner qg-urgent">
+            <div class="qg-urgent-time" class="live-time">{{ state.content.time }}</div>
+            <div class="qg-urgent-countdown" data-event="10:00">
+                <span class="qg-urgent-label">{{ state.content.countdown_label }}</span>
+                <span class="qg-urgent-value">{{ state.content.countdown }}</span>
+            </div>
+        </div>
+        <div class="qg-current-event">
+            <span class="qg-label">NOW</span>
+            <span class="qg-event-name">{{ state.content.current_event if state.content.current_event else "Free Time" }}</span>
+        </div>
+        <div class="qg-next-event">
+            <span class="qg-label">NEXT</span>
+            <span class="qg-event-name">{{ state.content.next_event }}</span>
+            <span class="qg-event-time">{{ state.content.next_event_time }}</span>
+        </div>
+        {% else %}
+        {# NORMAL MODE - Countdown beside clock #}
+        <div class="qg-top-row">
+            <div class="qg-time-block">
+                <div class="qg-current-time" class="live-time">{{ state.content.time }}</div>
+                <div class="qg-date" id="live-date">{{ state.content.date }}</div>
+            </div>
             {% if state.content.countdown %}
-            <div class="qg-countdown-inline">
-                <span class="qg-countdown-label">{{ state.content.countdown_label }}</span>
+            <div class="qg-countdown-block" data-event="10:00" qg-{{ state.content.countdown_urgency }}">
                 <span class="qg-countdown-value">{{ state.content.countdown }}</span>
+                <span class="qg-countdown-label">{{ state.content.countdown_label }}</span>
             </div>
             {% endif %}
         </div>
-        <div class="qg-weather-block">
-            <div class="qg-weather-main">
-                <span class="qg-weather-icon">{{ state.content.weather_icon }}</span>
-                <span class="qg-weather-temp">{{ state.content.weather_temp }}</span>
-            </div>
-            <div class="qg-weather-details">
-                <span class="qg-weather-desc">{{ state.content.weather_desc }}</span>
-                <span class="qg-weather-highlow">H: {{ state.content.weather_high }}° L: {{ state.content.weather_low }}°</span>
-            </div>
-        </div>
-    </div>
-    
-    <div class="qg-left-col">
         <div class="qg-current-event">
             <span class="qg-label">NOW</span>
             <span class="qg-event-name">{{ state.content.current_event if state.content.current_event else "Free Time" }}</span>
@@ -39,9 +48,20 @@
             <span class="qg-event-location">{{ state.content.next_location }}</span>
             {% endif %}
         </div>
+        {% endif %}
     </div>
     
     <div class="qg-right-col">
+        <div class="qg-weather-block">
+            <div class="qg-weather-main">
+                <span class="qg-weather-icon">{{ state.content.weather_icon }}</span>
+                <span class="qg-weather-temp">{{ state.content.weather_temp }}</span>
+            </div>
+            <div class="qg-weather-details">
+                <span class="qg-weather-desc">{{ state.content.weather_desc }}</span>
+                <span class="qg-weather-highlow">H: {{ state.content.weather_high }}° L: {{ state.content.weather_low }}°</span>
+            </div>
+        </div>
         <div class="qg-dinner">
             <span class="qg-label">DINNER</span>
             <span class="qg-dinner-text">{{ state.content.dinner if state.content.dinner else "TBD" }}</span>
@@ -50,7 +70,7 @@
             <span class="qg-label">FAMILY TASKS</span>
             <ul class="qg-task-list">
                 {% for task in state.content.tasks %}
-                <li>{{ task }}</li>
+                <li>2022 {{ task }}</li>
                 {% endfor %}
             </ul>
         </div>
@@ -61,204 +81,130 @@
 .quick-glance {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 15px;
-    padding: 15px;
-    height: 100%;
+    gap: 6px;
+    padding: 6px;
+    height: 100vh;
+    box-sizing: border-box;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    overflow: hidden;
 }
 
-.qg-top {
-    grid-column: 1 / -1;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.qg-left-col, .qg-right-col { display: flex; flex-direction: column; gap: 4px; }
+
+{# URGENT MODE STYLES #}
+.qg-urgent-banner {
+    flex: 1;
     display: flex;
-    gap: 20px;
     align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    border-radius: 12px;
+    padding: 20px;
+    animation: pulse 1s infinite;
 }
+.qg-urgent-time { font-size: 2rem; font-weight: 700; color: #fff; }
+.qg-urgent-countdown { text-align: center; }
+.qg-urgent-label { display: block; font-size: 1.2rem; color: rgba(255,255,255,0.8); text-transform: uppercase; }
+.qg-urgent-value { display: block; font-size: 7rem; font-weight: 700; color: #fff; line-height: 1; }
+
+{# NORMAL MODE STYLES #}
+.qg-top-row { display: flex; gap: 6px; }
 
 .qg-time-block {
     flex: 1;
     text-align: center;
-    padding: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 20px;
+    padding: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
 }
 
-.qg-current-time {
-    font-size: 4rem;
-    font-weight: 700;
-    color: #fff;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+.qg-current-time { font-size: 7rem; font-weight: 700; color: #fff; line-height: 1; }
+.qg-date { font-size: 1.2rem; color: rgba(255,255,255,0.7); margin-top: 4px; }
+
+.qg-countdown-block {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.qg-countdown-block.qg-safe { background: rgba(46, 204, 113, 0.4); }
+.qg-countdown-block.qg-warning { background: rgba(241, 196, 15, 0.4); }
+.qg-countdown-block.qg-caution { background: rgba(230, 126, 34, 0.5); }
+
+.qg-countdown-value { font-size: 3.2rem; font-weight: 700; color: #fff; line-height: 1; }
+.qg-countdown-label { font-size: 0.95rem; color: rgba(255,255,255,0.8); text-transform: uppercase; margin-top: 4px; }
+
+.qg-current-event, .qg-next-event { flex: 1;
+    padding: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
-.qg-date {
-    font-size: 1.4rem;
-    color: rgba(255,255,255,0.9);
-    margin-top: 5px;
-}
-
-.qg-countdown-inline {
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: rgba(0,0,0,0.3);
-    border-radius: 10px;
-    display: inline-block;
-}
-
-.qg-countdown-label {
-    display: block;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: rgba(255,255,255,0.7);
-}
-
-.qg-countdown-value {
-    display: block;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #fff;
-}
+.qg-label { display: block; font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; color: #ffd700; font-weight: 700; margin-bottom: 4px; }
+.qg-event-name { display: block; font-size: 9rem; font-weight: 700; color: #fff; }
+.qg-event-time { display: block; font-size: 1.4rem; color: rgba(255,255,255,0.7); }
+.qg-event-location { display: block; font-size: 1rem; color: rgba(255,255,255,0.5); margin-top: 4px; font-style: italic; }
 
 .qg-weather-block {
-    flex: 1;
-    padding: 20px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    border-radius: 20px;
+    padding: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
     text-align: center;
 }
-
-.qg-weather-main {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-.qg-weather-icon {
-    font-size: 3rem;
-}
-
-.qg-weather-temp {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #fff;
-}
-
-.qg-weather-details {
-    margin-top: 10px;
-}
-
-.qg-weather-desc {
-    display: block;
-    font-size: 1.2rem;
-    color: rgba(255,255,255,0.9);
-}
-
-.qg-weather-highlow {
-    display: block;
-    font-size: 1rem;
-    color: rgba(255,255,255,0.7);
-    margin-top: 5px;
-}
-
-.qg-left-col {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.qg-current-event, .qg-next-event {
-    flex: 1;
-    padding: 25px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-.qg-label {
-    display: block;
-    font-size: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: #ffd700;
-    font-weight: 700;
-    margin-bottom: 10px;
-}
-
-.qg-event-name {
-    display: block;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 5px;
-}
-
-.qg-event-time {
-    display: block;
-    font-size: 1.3rem;
-    color: rgba(255,255,255,0.8);
-}
-
-.qg-event-location {
-    display: block;
-    font-size: 1rem;
-    color: rgba(255,255,255,0.6);
-    margin-top: 8px;
-    font-style: italic;
-}
-
-.qg-right-col {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
+.qg-weather-main { display: flex; align-items: center; justify-content: center; gap: 8px; }
+.qg-weather-icon { font-size: 4.5rem; }
+.qg-weather-temp { font-size: 9rem; font-weight: 700; color: #fff; }
+.qg-weather-icon { font-size: 7rem; }
+.qg-weather-details { margin-top: 4px; }
+.qg-weather-desc { display: block; font-size: 1.2rem; color: rgba(255,255,255,0.7); }
+.qg-weather-highlow { display: block; font-size: 1rem; color: rgba(255,255,255,0.5); }
 
 .qg-dinner {
-    flex: 0 0 auto;
-    padding: 25px;
-    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-    border-radius: 15px;
+    padding: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
     text-align: center;
 }
-
-.qg-dinner .qg-label {
-    color: #c44569;
-}
-
-.qg-dinner-text {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #2d3436;
-}
+.qg-dinner .qg-label { color: #ffd700; }
+.qg-dinner-text { font-size: 7rem; font-weight: 600; color: #fff; }
 
 .qg-tasks {
+    padding: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
     flex: 1;
-    padding: 25px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 15px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
 }
+.qg-tasks .qg-label { color: #ffd700; }
+.qg-task-list { list-style: none; padding: 0; margin: 6px 0 0 0; }
+.qg-task-list li { padding: 6px 0; font-size: 1.2rem; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.qg-task-list li:last-child { border-bottom: none; }
 
-.qg-tasks .qg-label {
-    color: #00d2d3;
-}
-
-.qg-task-list {
-    list-style: none;
-    padding: 0;
-    margin: 10px 0 0 0;
-}
-
-.qg-task-list li {
-    padding: 10px 0;
-    font-size: 1.1rem;
-    color: #fff;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.qg-task-list li:last-child {
-    border-bottom: none;
-}
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 </style>
+<script>
+function updateClock() {
+    const now = new Date();
+    document.getElementsByClassName("live-time").forEach(el => el.textContent = now.toLocaleTimeString("en-US", {hour:"numeric",minute:"2-digit",hour12:true});
+    document.getElementsByClassName("live-date").forEach(el => el.textContent = now.toLocaleDateString('en-US', {weekday:'long',month:'short',day:'numeric'});
+}
+setInterval(updateClock, 1000); updateClock();
+
+function updateCountdown() {
+    var now = new Date();
+    var mins = now.getHours() * 60 + now.getMinutes();
+    var leaveMins = 9 * 60 + 45;
+    var diff = leaveMins - mins;
+    if (diff < 0) diff = 0;
+    var display = diff + "m";
+    document.querySelectorAll('.qg-countdown-value, .qg-urgent-value').forEach(function(el) { el.textContent = display; });
+}
+setInterval(updateCountdown, 1000); updateCountdown();
+</script>
