@@ -58,7 +58,7 @@
         <div class="qg-tasks-block">
             <span class="qg-label">TASKS</span>
             <div class="qg-tasks-list">
-                {% set tasks = content.tasks if content.tasks is defined else [] %}
+                {% set tasks = content.get('tasks', []) %}
                 {% for task in tasks[:5] %}
                 <div class="task-item">
                     <span class="task-name">{{ task.name }}</span>
