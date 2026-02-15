@@ -263,6 +263,8 @@
                 {% include 'countdown.html' %}
             {% elif state.mode == 'quickglance' %}
                 {% include 'quickglance.html' %}
+            {% elif state.mode == 'message' %}
+                {% include 'message.html' %}
             {% elif state.mode == 'verse' %}
                 {% include 'verse.html' %}
             {% elif state.mode == 'alert' %}

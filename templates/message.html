@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dobby Message</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .message-container {
+            text-align: center;
+            padding: 40px;
+            max-width: 90%;
+        }
+        .message-text {
+            font-size: {{ font_size|default('4rem') }};
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            line-height: 1.3;
+            animation: fadeIn 1s ease-out;
+        }
+        .message-sub {
+            font-size: {{ sub_size|default('2rem') }};
+            color: rgba(255,255,255,0.7);
+            margin-top: 20px;
+            animation: fadeIn 1s ease-out 0.3s both;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        .auto-dismiss {
+            position: fixed;
+            bottom: 20px;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="message-container">
+        <div class="message-text">{{ message }}</div>
+        {% if sub_message %}
+        <div class="message-sub">{{ sub_message }}</div>
+        {% endif %}
+    </div>
+    {% if auto_dismiss %}
+    <div class="auto-dismiss">Returning in {{ auto_dismiss }} seconds...</div>
+    <script>
+        setTimeout(() => { window.location.href = '/'; }, {{ auto_dismiss }} * 1000);
+    </script>
+    {% endif %}
+</body>
+</html>

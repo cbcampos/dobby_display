@@ -114,6 +114,25 @@ def health():
     """Health check endpoint"""
     return jsonify({"status": "ok", "time": datetime.now().isoformat()})
 
+@app.route('/api/message', methods=['POST'])
+def send_message():
+    """Send a fullscreen message"""
+    global display_state
+    data = request.json or {}
+    display_state = {
+        "mode": "message",
+        "title": "Message",
+        "content": {
+            "message": data.get("message", ""),
+            "sub_message": data.get("sub_message", ""),
+            "font_size": data.get("font_size", "4rem"),
+            "sub_size": data.get("sub_size", "2rem"),
+            "auto_dismiss": data.get("auto_dismiss", 0)  # 0 = stay forever
+        },
+        "updated": datetime.now().isoformat()
+    }
+    return jsonify({"success": True, "state": display_state})
+
 if __name__ == '__main__':
     print("🎬 Dobby Display Receiver starting...")
     print("Open http://localhost:5000 in browser")
