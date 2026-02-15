@@ -314,6 +314,21 @@ def build_quickglance():
     
     return data
 
+def push_template():
+    """Push template to display automatically"""
+    template_path = os.path.join(os.path.dirname(__file__), "templates", "quickglance.html")
+    try:
+        with open(template_path, "r") as f:
+            content = f.read()
+        r = requests.post(f"{DISPLAY_URL}/api/template/quickglance.html", 
+                         json={"content": content}, timeout=10)
+        if r.status_code == 200:
+            print(f"Template pushed: {r.json()}")
+        else:
+            print(f"Template push failed: {r.status_code}")
+    except Exception as e:
+        print(f"Template push error: {e}")
+
 def push_display(data):
     """Push data to display"""
     payload = {"mode": "quickglance", "title": "Quick Look", "content": data}
@@ -327,6 +342,8 @@ if __name__ == "__main__":
     print("Building quick glance...")
     data = build_quickglance()
     print(json.dumps(data, indent=2))
+    print("\nPushing template...")
+    push_template()
     print("\nPushing to display...")
     push_display(data)
 

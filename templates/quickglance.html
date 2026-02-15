@@ -1,4 +1,16 @@
 {# Quick Glance Mode #}
+{% if config %}
+<style>
+.qg-current-time { font-size: {{ config.font_clock|default('5rem') }}; }
+.qg-date { font-size: {{ config.font_date|default('1.4rem') }}; }
+.qg-label { font-size: {{ config.font_label|default('1.4rem') }}; }
+.qg-event-name { font-size: {{ config.font_event|default('2.8rem') }}; }
+.qg-event-time { font-size: {{ config.font_event_time|default('2rem') }}; }
+.qg-weather-icon, .qg-weather-temp { font-size: {{ config.font_weather_icon|default('2.8rem') }}; }
+.qg-dinner-text { font-size: {{ config.font_dinner|default('2.2rem') }}; }
+.qg-task-list li { font-size: {{ config.font_tasks|default('1.8rem') }}; }
+</style>
+{% endif %}
 <div class="quick-glance animate-in">
     <div class="qg-left-col">
         {% if state.content.countdown_urgency == 'urgent' %}
@@ -121,13 +133,13 @@
     border-radius: 8px;
 }
 
-.qg-current-time { font-size: 2.5rem; font-weight: 700; color: #fff; line-height: 1; }
-.qg-date { font-size: 0.7rem; color: rgba(255,255,255,0.7); margin-top: 2px; }
+.qg-current-time { font-size: 5rem; font-weight: 700; color: #fff; line-height: 1; }
+.qg-date { font-size: 1.4rem; color: rgba(255,255,255,0.7); margin-top: 4px; }
 
 .qg-countdown-block {
     flex: 1;
     text-align: center;
-    padding: 6px;
+    padding: 10px;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -137,53 +149,53 @@
 .qg-countdown-block.qg-warning { background: rgba(241, 196, 15, 0.4); }
 .qg-countdown-block.qg-caution { background: rgba(230, 126, 34, 0.5); }
 
-.qg-countdown-value { font-size: 1.2rem; font-weight: 700; color: #fff; line-height: 1; }
-.qg-countdown-label { font-size: 0.5rem; color: rgba(255,255,255,0.8); text-transform: uppercase; margin-top: 2px; }
+.qg-countdown-value { font-size: 2.4rem; font-weight: 700; color: #fff; line-height: 1; }
+.qg-countdown-label { font-size: 1rem; color: rgba(255,255,255,0.8); text-transform: uppercase; margin-top: 4px; }
 
 .qg-current-event, .qg-next-event { flex: 1;
-    padding: 6px;
+    padding: 10px;
     background: rgba(255,255,255,0.1);
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.1);
 }
 
-.qg-label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #ffd700; font-weight: 700; margin-bottom: 2px; }
-.qg-event-name { display: block; font-size: 1.4rem; font-weight: 700; color: #fff; }
-.qg-event-time { display: block; font-size: 1rem; color: rgba(255,255,255,0.7); }
-.qg-event-location { display: block; font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 1px; font-style: italic; }
+.qg-label { display: block; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 2px; color: #ffd700; font-weight: 700; margin-bottom: 4px; }
+.qg-event-name { display: block; font-size: 2.8rem; font-weight: 700; color: #fff; }
+.qg-event-time { display: block; font-size: 2rem; color: rgba(255,255,255,0.7); }
+.qg-event-location { display: block; font-size: 1.6rem; color: rgba(255,255,255,0.5); margin-top: 2px; font-style: italic; }
 
 .qg-weather-block {
-    padding: 6px;
+    padding: 10px;
     background: rgba(255,255,255,0.1);
     border-radius: 8px;
     text-align: center;
 }
-.qg-weather-main { display: flex; align-items: center; justify-content: center; gap: 4px; }
-.qg-weather-icon { font-size: 1.4rem; }
-.qg-weather-temp { font-size: 1.4rem; font-weight: 700; color: #fff; }
-.qg-weather-details { margin-top: 2px; }
-.qg-weather-desc { display: block; font-size: 0.8rem; color: rgba(255,255,255,0.7); }
-.qg-weather-highlow { display: block; font-size: 0.7rem; color: rgba(255,255,255,0.5); }
+.qg-weather-main { display: flex; align-items: center; justify-content: center; gap: 6px; }
+.qg-weather-icon { font-size: 2.8rem; }
+.qg-weather-temp { font-size: 2.8rem; font-weight: 700; color: #fff; }
+.qg-weather-details { margin-top: 4px; }
+.qg-weather-desc { display: block; font-size: 1.6rem; color: rgba(255,255,255,0.7); }
+.qg-weather-highlow { display: block; font-size: 1.4rem; color: rgba(255,255,255,0.5); }
 
 .qg-dinner {
-    padding: 6px;
+    padding: 10px;
     background: rgba(255,255,255,0.1);
     border-radius: 8px;
     text-align: center;
 }
 .qg-dinner .qg-label { color: #ffd700; }
-.qg-dinner-text { font-size: 1.1rem; font-weight: 600; color: #fff; }
+.qg-dinner-text { font-size: 2.2rem; font-weight: 600; color: #fff; }
 
 .qg-tasks {
-    padding: 6px;
+    padding: 10px;
     background: rgba(255,255,255,0.1);
     border-radius: 8px;
     border: 1px solid rgba(255,255,255,0.1);
     flex: 1;
 }
 .qg-tasks .qg-label { color: #ffd700; }
-.qg-task-list { list-style: none; padding: 0; margin: 4px 0 0 0; }
-.qg-task-list li { padding: 4px 0; font-size: 0.9rem; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.qg-task-list { list-style: none; padding: 0; margin: 6px 0 0 0; }
+.qg-task-list li { padding: 6px 0; font-size: 1.8rem; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .qg-task-list li:last-child { border-bottom: none; }
 
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }

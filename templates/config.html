@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dobby Display Config</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1a1a2e; color: #fff; padding: 20px; max-width: 600px; margin: 0 auto; }
+        h1 { color: #ffd700; text-align: center; }
+        .section { background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .section h2 { margin: 0 0 15px 0; font-size: 1.2rem; color: #ffd700; }
+        .control { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .control label { font-size: 1rem; }
+        .control input[type="range"] { width: 60%; }
+        .control span { width: 60px; text-align: right; font-size: 0.9rem; color: #aaa; }
+        .btn { display: block; width: 100%; padding: 15px; background: #ffd700; color: #1a1a2e; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 20px; }
+        .btn:active { opacity: 0.8; }
+        .status { text-align: center; margin-top: 15px; padding: 10px; border-radius: 8px; display: none; }
+        .status.success { background: rgba(46, 204, 113, 0.4); display: block; }
+    </style>
+</head>
+<body>
+    <h1>⚙️ Display Config</h1>
+    
+    <div class="section">
+        <h2>🕐 Clock</h2>
+        <div class="control"><label>Time</label><input type="range" id="font_clock" min="2" max="10" step="0.5"><span id="val_clock"></span></div>
+        <div class="control"><label>Date</label><input type="range" id="font_date" min="0.5" max="3" step="0.1"><span id="val_date"></span></div>
+    </div>
+    
+    <div class="section">
+        <h2>📅 Events</h2>
+        <div class="control"><label>Label</label><input type="range" id="font_label" min="0.5" max="3" step="0.1"><span id="val_label"></span></div>
+        <div class="control"><label>Event Name</label><input type="range" id="font_event" min="1" max="5" step="0.2"><span id="val_event"></span></div>
+        <div class="control"><label>Time</label><input type="range" id="font_event_time" min="0.5" max="4" step="0.2"><span id="val_event_time"></span></div>
+    </div>
+    
+    <div class="section">
+        <h2>🌤️ Weather</h2>
+        <div class="control"><label>Icon</label><input type="range" id="font_weather_icon" min="1" max="5" step="0.2"><span id="val_weather_icon"></span></div>
+        <div class="control"><label>Temp</label><input type="range" id="font_weather_temp" min="1" max="5" step="0.2"><span id="val_weather_temp"></span></div>
+    </div>
+    
+    <div class="section">
+        <h2>🍽️ Dinner</h2>
+        <div class="control"><label>Text</label><input type="range" id="font_dinner" min="0.5" max="4" step="0.2"><span id="val_dinner"></span></div>
+    </div>
+    
+    <div class="section">
+        <h2>✅ Tasks</h2>
+        <div class="control"><label>Text</label><input type="range" id="font_tasks" min="0.5" max="4" step="0.2"><span id="val_tasks"></span></div>
+    </div>
+    
+    <button class="btn" onclick="saveConfig()">💾 Save & Apply</button>
+    <div class="status" id="status"></div>
+    
+    <script>
+        const fields = ['clock','date','label','event','event_time','weather_icon','weather_temp','dinner','tasks'];
+        
+        async function loadConfig() {
+            const res = await fetch('/api/config');
+            const cfg = await res.json();
+            fields.forEach(f => {
+                const val = cfg['font_'+f].replace('rem','');
+                document.getElementById('font_'+f).value = val;
+                document.getElementById('val_'+f).textContent = val+'rem';
+            });
+        }
+        
+        async function saveConfig() {
+            const cfg = {};
+            fields.forEach(f => cfg['font_'+f] = document.getElementById('font_'+f).value + 'rem');
+            
+            await fetch('/api/config', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(cfg) });
+            
+            const status = document.getElementById('status');
+            status.textContent = '✓ Saved! Refreshing display...';
+            status.className = 'status success';
+            
+            // Trigger refresh on main display
+            fetch('/api/refresh', {method:'POST'});
+            
+            setTimeout(() => { status.textContent = '✓ Done!'; }, 2000);
+        }
+        
+        fields.forEach(f => {
+            document.getElementById('font_'+f).addEventListener('input', e => {
+                document.getElementById('val_'+f).textContent = e.target.value + 'rem';
+            });
+        });
+        
+        loadConfig();
+    </script>
+</body>
+</html>

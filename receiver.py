@@ -25,7 +25,12 @@ display_state = {
 @app.route('/')
 def index():
     """Main display page - renders based on current mode"""
-    return render_template('display.html', state=display_state)
+    return render_template('display.html', state=display_state, config=config)
+
+@app.route('/config')
+def config_page():
+    """Config page"""
+    return render_template('config.html')
 
 @app.route('/api/status')
 def status():
@@ -101,3 +106,24 @@ if __name__ == '__main__':
     print("Open http://localhost:5000 in browser")
     print("Use /api/update to push content")
     app.run(host='0.0.0.0', port=5000, debug=False)
+
+# Config storage
+config = {
+    "font_clock": "5rem",
+    "font_date": "1.4rem",
+    "font_label": "1.4rem",
+    "font_event": "2.8rem",
+    "font_event_time": "2rem",
+    "font_weather_icon": "2.8rem",
+    "font_weather_temp": "2.8rem",
+    "font_dinner": "2.2rem",
+    "font_tasks": "1.8rem"
+}
+
+@app.route('/api/config', methods=['GET', 'POST'])
+def config_endpoint():
+    global config
+    if request.method == 'POST':
+        config.update(request.json)
+        return jsonify({"success": True, "config": config})
+    return jsonify(config)
