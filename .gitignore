@@ -4,3 +4,4 @@ __pycache__/
 .env
 custom_templates/
 fetch.log
+fetch.log
