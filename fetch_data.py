@@ -282,10 +282,6 @@ def build_quickglance():
             urgency = "critical"
         elif total_mins <= 15:
             urgency = "urgent"
-        elif total_mins <= 30:
-            urgency = "caution"
-        elif total_mins <= 60:
-            urgency = "warning"
     
     data = {
         "time": now.strftime("%-I:%M %p"),

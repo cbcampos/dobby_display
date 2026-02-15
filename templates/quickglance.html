@@ -15,7 +15,7 @@
     <div class="qg-left-col">
         <div class="qg-time-block">
             <div class="qg-current-time live-time">{{ state.content.time }}</div>
-            <span class="qg-countdown {% if state.content.countdown_urgency == 'critical' %}critical{% elif state.content.countdown_urgency == 'urgent' or state.content.countdown_urgency == 'warning' %}warning{% endif %}">
+            <span class="qg-countdown {% if state.content.countdown_urgency == 'critical' %}critical{% elif state.content.countdown_urgency == 'urgent' %}warning{% endif %}">
                 {% if state.content.countdown %}{{ state.content.countdown }}{% endif %}
                 {% if state.content.countdown_label %} ({{ state.content.countdown_label }}){% endif %}
             </span>
