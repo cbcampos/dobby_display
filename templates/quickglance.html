@@ -49,7 +49,16 @@
         </div>
         <div class="qg-tasks-block">
             <span class="qg-label">TASKS</span>
-            <div class="qg-tasks-list">{{ state.content.tasks if state.content.tasks else "No tasks" }}</div>
+            <div class="qg-tasks-list">
+                {% for task in state.content.tasks[:5] %}
+                <div class="task-item">
+                    <span class="task-name">{{ task.name }}</span>
+                    {% if task.due %}<span class="task-due">{{ task.due }}</span>{% endif %}
+                </div>
+                {% else %}
+                No tasks
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
@@ -212,6 +221,27 @@
     font-size: 1.1rem;
     color: rgba(255,255,255,0.8);
     line-height: 1.5;
+}
+
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.task-item:last-child {
+    border-bottom: none;
+}
+
+.task-name {
+    color: #fff;
+}
+
+.task-due {
+    color: #ffd700;
+    font-size: 0.9rem;
 }
 
 /* Countdown inline */
