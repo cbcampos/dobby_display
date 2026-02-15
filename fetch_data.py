@@ -12,6 +12,15 @@ import requests
 from datetime import datetime, timedelta, timezone
 import yaml
 
+# Load secrets if available
+secrets_path = os.path.expanduser("~/.openclaw/.secrets/todoist.env")
+if os.path.exists(secrets_path):
+    with open(secrets_path) as f:
+        for line in f:
+            if line.strip() and "=" in line:
+                key, val = line.strip().split("=", 1)
+                os.environ.setdefault(key, val)
+
 # Config
 DISPLAY_URL = os.environ.get("DOBBY_DISPLAY_URL", "http://100.105.30.20:5000")
 TODOIST_TOKEN = os.environ.get("TODOIST_API_TOKEN", "79267f117496088bbc215416cb4c355893432553")
@@ -124,10 +133,14 @@ def parse_event_time(start_str):
 
 def get_todoist_dinner():
     """Fetch today's dinner from Todoist"""
+    token = os.environ.get("TODOIST_API_TOKEN") or os.environ.get("TODOIST_TOKEN")
+    if not token:
+        print("Todoist error: No API token")
+        return "TBD"
     try:
         result = subprocess.run(
             ["curl", "-s", "https://api.todoist.com/api/v2/projects", 
-             "-H", f"Authorization: Bearer {TODOIST_TOKEN}"],
+             "-H", f"Authorization: Bearer {token}"],
             capture_output=True, text=True, timeout=15
         )
         projects = json.loads(result.stdout)
@@ -143,7 +156,7 @@ def get_todoist_dinner():
         today = datetime.now().strftime("%Y-%m-%d")
         result = subprocess.run(
             ["curl", "-s", f"https://api.todoist.com/api/v2/tasks?project_id={dinner_id}",
-             "-H", f"Authorization: Bearer {TODOIST_TOKEN}"],
+             "-H", f"Authorization: Bearer {token}"],
             capture_output=True, text=True, timeout=15
         )
         tasks = json.loads(result.stdout)
@@ -162,10 +175,14 @@ def get_weather():
 
 def get_family_tasks():
     """Fetch family tasks from Todoist"""
+    token = os.environ.get("TODOIST_API_TOKEN") or os.environ.get("TODOIST_TOKEN")
+    if not token:
+        print("Family tasks error: No TODOIST_API_TOKEN")
+        return ["Set up Todoist", "Check API key"]
     try:
         result = subprocess.run(
             ["curl", "-s", "https://api.todoist.com/api/v2/tasks?project_id=2366876876",
-             "-H", f"Authorization: Bearer {TODOIST_TOKEN}"],
+             "-H", f"Authorization: Bearer {token}"],
             capture_output=True, text=True, timeout=15
         )
         tasks = json.loads(result.stdout)
