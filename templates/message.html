@@ -139,7 +139,10 @@
                 const remaining = parseInt(dismissAt) - Date.now();
                 if (remaining <= 0) {
                     sessionStorage.removeItem('message_dismiss_at');
-                    window.location.href = '/api/clear-message';
+                    // Call the API to clear message, then redirect to home
+                    fetch('/api/clear-message', {method: 'POST'})
+                        .then(() => window.location.href = '/')
+                        .catch(() => window.location.href = '/');
                 } else {
                     // Update progress bar
                     const progress = document.querySelector('.dismiss-progress');
@@ -155,7 +158,10 @@
         // Check if we already passed the dismiss time on page load
         const dismissAt = sessionStorage.getItem('message_dismiss_at');
         if (dismissAt && parseInt(dismissAt) - Date.now() <= 0) {
-            window.location.href = '/api/clear-message';
+            sessionStorage.removeItem('message_dismiss_at');
+            fetch('/api/clear-message', {method: 'POST'})
+                .then(() => window.location.href = '/')
+                .catch(() => window.location.href = '/');
         } else {
             checkDismiss();
         }
