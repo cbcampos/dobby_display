@@ -3,3 +3,4 @@ config.json
 __pycache__/
 .env
 custom_templates/
+fetch.log
