@@ -222,31 +222,3 @@
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 </style>
 
-<script>
-// Web Worker for clock - runs on separate thread, not throttled
-const clockWorkerCode = `
-  setInterval(() => {
-    postMessage(new Date().toLocaleTimeString('en-US', {hour:'numeric',minute:'2-digit',hour12:true}));
-  }, 1000);
-  postMessage(new Date().toLocaleTimeString('en-US', {hour:'numeric',minute:'2-digit',hour12:true}));
-`;
-
-const blob = new Blob([clockWorkerCode], {type: 'application/javascript'});
-const worker = new Worker(URL.createObjectURL(blob));
-
-worker.onmessage = function(e) {
-  document.querySelectorAll('.live-time').forEach(el => el.textContent = e.data);
-  document.querySelectorAll('.live-date').forEach(el => {
-    const now = new Date();
-    el.textContent = now.toLocaleDateString('en-US', {weekday:'long',month:'short',day:'numeric'});
-  });
-};
-
-// Update date every minute too
-setInterval(() => {
-  const now = new Date();
-  document.querySelectorAll('.live-date').forEach(el => {
-    el.textContent = now.toLocaleDateString('en-US', {weekday:'long',month:'short',day:'numeric'});
-  });
-}, 60000);
-</script>
