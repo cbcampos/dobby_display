@@ -255,7 +255,8 @@ def build_quickglance():
             # Check if event hasn't ended yet
             if not event_end or event_end > now:
                 current_event = event.get("summary", "Event")
-                current_event_time = event_start.strftime("%-I:%M %p")
+                # Show END time of current event
+                current_event_time = event_end.strftime("%-I:%M %p") if event_end else event_start.strftime("%-I:%M %p")
                 current_location = event.get("location", "")
         elif not next_event and event_start and event_start > now:
                 next_event = event.get("summary", "Event")
