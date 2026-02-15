@@ -41,12 +41,13 @@ echo "📝 Creating start script..."
 cat > start_display.sh << 'EOF'
 #!/bin/bash
 cd ~/dobby_display
-echo "🚀 Starting Dobby Display..."
+echo "🚀 Starting Dobby Display on http://localhost:5000"
 echo "Press Ctrl+C to stop"
 python3 receiver.py
 EOF
 
 chmod +x start_display.sh
+echo "✓ Created start_display.sh"
 
 # Create Tailscale autostart script
 cat > start_tailscale.sh << 'EOF'
