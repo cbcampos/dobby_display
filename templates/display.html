@@ -39,6 +39,8 @@
             margin-bottom: 10px;
             backdrop-filter: blur(10px);
         }
+        body.message-mode header { display: none; }
+        body.message-mode .content { height: 100vh; }
         
         h1 {
             font-size: 1rem;
@@ -235,7 +237,7 @@
         }
     </style>
 </head>
-<body>
+<body class="{{ state.mode }}-mode">
     <div class="container">
         <header>
             <h1>
