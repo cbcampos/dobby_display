@@ -10,9 +10,17 @@ import os
 import json
 import logging
 from datetime import datetime
+from jinja2 import ChoiceLoader, FileSystemLoader
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+CUSTOM_TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "custom_templates")
+os.makedirs(CUSTOM_TEMPLATE_DIR, exist_ok=True)
+default_loader = app.jinja_loader or FileSystemLoader(os.path.join(os.path.dirname(__file__), "templates"))
+app.jinja_loader = ChoiceLoader([
+    FileSystemLoader(CUSTOM_TEMPLATE_DIR),
+    default_loader
+])
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -130,7 +138,7 @@ def update_template(template_name):
     safe_name = os.path.basename(template_name)
     if not safe_name.endswith('.html'):
         safe_name += '.html'
-    template_path = os.path.join(os.path.dirname(__file__), 'templates', safe_name)
+    template_path = os.path.join(CUSTOM_TEMPLATE_DIR, safe_name)
     with open(template_path, 'w') as f:
         f.write(content)
     return jsonify({"success": True, "template": safe_name})
