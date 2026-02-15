@@ -230,7 +230,8 @@ def send_message():
             "auto_dismiss": auto_dismiss,
             "type": message_type,
             "color": data.get("color", get_type_color(message_type)),
-            "sticky": sticky
+            "sticky": sticky,
+            "speak": data.get("speak", "")
         }
     elif display_mode == "countdown":
         content = data.get("content", {})

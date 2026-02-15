@@ -314,7 +314,9 @@
                             lastUpdated = data.updated;
                             document.getElementById('friendly-updated').textContent = 'Updated ' + formatFriendlyTime(data.updated);
                             // Check for speech
-                            if (data.speak) {
+                            if (data.content && data.content.speak) {
+                                speak(data.content.speak);
+                            } else if (data.speak) {
                                 speak(data.speak);
                             }
                             location.reload();
