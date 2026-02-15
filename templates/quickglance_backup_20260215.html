@@ -45,7 +45,7 @@
         </div>
         <div class="qg-tasks-block">
             <span class="qg-label">TASKS</span>
-            <div class="qg-tasks-list">{{ state.content.tasks if state.content.tasks else "No tasks" }}</div>
+            <div class="qg-tasks-list">{{ state.content['tasks'] if state.content.get('tasks') else "No tasks" }}</div>
         </div>
     </div>
 </div>
