@@ -111,16 +111,24 @@
 <body class="message-mode type-{{ state.content.type|default('info') }}">
     {% if state.content.speak %}
     <script>
-        // TTS - only speak once on page load
-        if (!sessionStorage.getItem('message_spoken')) {
-            sessionStorage.setItem('message_spoken', 'true');
-            window.speechSynthesis.cancel();
-            const msg = new SpeechSynthesisUtterance('{{ state.content.speak }}');
-            msg.rate = 1;
-            msg.pitch = 1;
-            window.speechSynthesis.speak(msg);
+        function speakText() {
+            if (!sessionStorage.getItem('message_spoken')) {
+                sessionStorage.setItem('message_spoken', 'true');
+                window.speechSynthesis.cancel();
+                const msg = new SpeechSynthesisUtterance('{{ state.content.speak }}');
+                msg.rate = 1;
+                msg.pitch = 1;
+                window.speechSynthesis.speak(msg);
+            }
         }
+        // Try autoplay, fallback to button
+        window.addEventListener('load', function() {
+            setTimeout(speakText, 500);
+        });
     </script>
+    <button onclick="speakText()" style="position:fixed;top:20px;left:20px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);padding:8px 16px;border-radius:20px;cursor:pointer;font-size:0.8rem;">
+        🔊 Tap to hear
+    </button>
     {% endif %}
     
     {% if state.content.sticky %}
