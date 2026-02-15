@@ -14,18 +14,24 @@
     <div class="qg-events">
         <div class="qg-current-event">
             <span class="qg-label">NOW</span>
-            <span class="qg-event-name">{{ state.content.current_event }}</span>
+            <span class="qg-event-name">{{ state.content.current_event if state.content.current_event else "Free Time" }}</span>
+            {% if state.content.current_location %}
+            <span class="qg-event-location">{{ state.content.current_location }}</span>
+            {% endif %}
         </div>
         <div class="qg-next-event">
             <span class="qg-label">NEXT</span>
             <span class="qg-event-name">{{ state.content.next_event }}</span>
             <span class="qg-event-time">{{ state.content.next_event_time }}</span>
+            {% if state.content.next_location %}
+            <span class="qg-event-location">{{ state.content.next_location }}</span>
+            {% endif %}
         </div>
     </div>
     
     <div class="qg-dinner">
         <span class="qg-label">DINNER</span>
-        <span class="qg-dinner-text">{{ state.content.dinner }}</span>
+        <span class="qg-dinner-text">{{ state.content.dinner if state.content.dinner else "TBD" }}</span>
     </div>
     
     <div class="qg-tasks">
@@ -49,108 +55,153 @@
 .quick-glance {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto auto;
-    gap: 15px;
-    padding: 10px;
+    grid-template-rows: auto auto auto auto auto;
+    gap: 12px;
+    padding: 12px;
     height: 100%;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
 }
 
 .qg-time {
     grid-column: 1 / -1;
     text-align: center;
-    padding: 5px;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
 }
 
 .qg-current-time {
-    font-size: 3rem;
+    font-size: 4rem;
     font-weight: 700;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 .qg-date {
-    font-size: 1rem;
-    opacity: 0.7;
+    font-size: 1.3rem;
+    color: rgba(255,255,255,0.9);
 }
 
 .qg-weather {
     grid-column: 1 / -1;
     text-align: center;
-    padding: 10px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-    font-size: 1.2rem;
+    padding: 15px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-radius: 15px;
+    font-size: 1.5rem;
+    color: #fff;
 }
 
 .qg-events {
     grid-column: 1 / -1;
     display: flex;
-    gap: 20px;
+    gap: 15px;
 }
 
 .qg-current-event, .qg-next-event {
     flex: 1;
-    padding: 10px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
+    padding: 20px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
 }
 
 .qg-label {
     display: block;
-    font-size: 0.7rem;
+    font-size: 0.9rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 0.6;
-    margin-bottom: 5px;
+    letter-spacing: 2px;
+    color: #ffd700;
+    font-weight: 700;
+    margin-bottom: 8px;
 }
 
 .qg-event-name {
     display: block;
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 5px;
 }
 
 .qg-event-time {
+    display: block;
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.8);
+}
+
+.qg-event-location {
+    display: block;
     font-size: 0.9rem;
-    opacity: 0.8;
+    color: rgba(255,255,255,0.6);
+    margin-top: 5px;
+    font-style: italic;
 }
 
 .qg-dinner {
-    padding: 10px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
+    padding: 20px;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+    border-radius: 15px;
+    text-align: center;
+}
+
+.qg-dinner .qg-label {
+    color: #c44569;
 }
 
 .qg-dinner-text {
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d3436;
 }
 
 .qg-tasks {
-    padding: 10px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
+    padding: 20px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.qg-tasks .qg-label {
+    color: #00d2d3;
 }
 
 .qg-task-list {
     list-style: none;
     padding: 0;
-    margin: 5px 0 0 0;
-    font-size: 0.9rem;
+    margin: 10px 0 0 0;
 }
 
 .qg-task-list li {
-    padding: 3px 0;
+    padding: 8px 0;
+    font-size: 1.1rem;
+    color: #fff;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.qg-task-list li:last-child {
+    border-bottom: none;
 }
 
 .qg-countdown {
     grid-column: 1 / -1;
-    padding: 15px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 10px;
+    padding: 25px;
+    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+    border-radius: 15px;
     text-align: center;
 }
 
+.qg-countdown .qg-label {
+    color: #fff;
+    font-size: 1rem;
+}
+
 .qg-countdown-text {
-    font-size: 1.5rem;
+    font-size: 3rem;
     font-weight: 700;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 </style>
