@@ -11,7 +11,7 @@ import sys
 import os
 
 # Default URL - should be overridden via config or environment
-DEFAULT_URL = os.environ.get("DOBBY_DISPLAY_URL", "http://100.119.55.47:5000")
+DEFAULT_URL = os.environ.get("DOBBY_DISPLAY_URL", "http://100.105.30.20:5000")
 
 def push_dashboard():
     """Reset to dashboard mode"""
