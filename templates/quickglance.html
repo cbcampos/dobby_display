@@ -222,21 +222,49 @@
 @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
 </style>
 <script>
-function updateClock() {
-    const now = new Date();
-    document.getElementsByClassName("live-time").forEach(el => el.textContent = now.toLocaleTimeString("en-US", {hour:"numeric",minute:"2-digit",hour12:true});
-    document.getElementsByClassName("live-date").forEach(el => el.textContent = now.toLocaleDateString('en-US', {weekday:'long',month:'short',day:'numeric'});
-}
-setInterval(updateClock, 1000); updateClock();
-
-function updateCountdown() {
-    var now = new Date();
-    var mins = now.getHours() * 60 + now.getMinutes();
-    var leaveMins = 9 * 60 + 45;
-    var diff = leaveMins - mins;
-    if (diff < 0) diff = 0;
-    var display = diff + "m";
-    document.querySelectorAll('.qg-countdown-value, .qg-urgent-value').forEach(function(el) { el.textContent = display; });
-}
-setInterval(updateCountdown, 1000); updateCountdown();
+(function() {
+    // Clock update using Date.now() to prevent drift from browser tab throttling
+    // Even if setInterval is throttled to once per minute in background tabs,
+    // using Date.now() ensures we always display the correct current time
+    
+    function updateClock() {
+        const now = new Date();
+        document.getElementsByClassName("live-time").forEach(el => el.textContent = now.toLocaleTimeString("en-US", {hour:"numeric",minute:"2-digit",hour12:true}));
+        document.getElementsByClassName("live-date").forEach(el => el.textContent = now.toLocaleDateString('en-US', {weekday:'long',month:'short',day:'numeric'}));
+    }
+    
+    function updateCountdown() {
+        const now = new Date();
+        const mins = now.getHours() * 60 + now.getMinutes();
+        const leaveMins = 9 * 60 + 45;
+        let diff = leaveMins - mins;
+        if (diff < 0) diff = 0;
+        const display = diff + "m";
+        document.querySelectorAll('.qg-countdown-value, .qg-urgent-value').forEach(el => el.textContent = display);
+    }
+    
+    // Initial updates
+    updateClock();
+    updateCountdown();
+    
+    // Set intervals - using Date.now() inside each callback ensures accuracy
+    // even when browser throttles the interval in background tabs
+    setInterval(updateClock, 1000);
+    setInterval(updateCountdown, 1000);
+    
+    // Critical: Force immediate sync when tab becomes visible again
+    // This fixes the "falling behind" issue when returning from background
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            updateClock();
+            updateCountdown();
+        }
+    });
+    
+    // Also sync on window focus (catches more edge cases)
+    window.addEventListener('focus', function() {
+        updateClock();
+        updateCountdown();
+    });
+})();
 </script>
