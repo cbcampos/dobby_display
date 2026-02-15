@@ -20,7 +20,7 @@
             max-width: 90%;
         }
         .message-text {
-            font-size: {{ font_size|default('4rem') }};
+            font-size: {{ state.content.font_size|default('4rem') }};
             font-weight: bold;
             color: #fff;
             text-shadow: 0 4px 20px rgba(0,0,0,0.5);
@@ -28,7 +28,7 @@
             animation: fadeIn 1s ease-out;
         }
         .message-sub {
-            font-size: {{ sub_size|default('2rem') }};
+            font-size: {{ state.content.sub_size|default('2rem') }};
             color: rgba(255,255,255,0.7);
             margin-top: 20px;
             animation: fadeIn 1s ease-out 0.3s both;
@@ -51,15 +51,15 @@
 </head>
 <body>
     <div class="message-container">
-        <div class="message-text">{{ message }}</div>
-        {% if sub_message %}
-        <div class="message-sub">{{ sub_message }}</div>
+        <div class="message-text">{{ state.content.message }}</div>
+        {% if state.content.sub_message %}
+        <div class="message-sub">{{ state.content.sub_message }}</div>
         {% endif %}
     </div>
-    {% if auto_dismiss %}
-    <div class="auto-dismiss">Returning in {{ auto_dismiss }} seconds...</div>
+    {% if state.content.auto_dismiss %}
+    <div class="auto-dismiss">Returning in {{ state.content.auto_dismiss }} seconds...</div>
     <script>
-        setTimeout(() => { window.location.href = '/'; }, {{ auto_dismiss }} * 1000);
+        setTimeout(() => { window.location.href = '/'; }, {{ state.content.auto_dismiss }} * 1000);
     </script>
     {% endif %}
 </body>
