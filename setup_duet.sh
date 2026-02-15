@@ -19,9 +19,13 @@ else
     git pull origin master
 fi
 
-# Install Python dependencies
+# Install Python dependencies (use apt for externally-managed systems)
 echo "📦 Installing Python dependencies..."
-pip3 install --user flask requests
+if command -v apt &> /dev/null; then
+    sudo apt install python3-flask python3-requests
+else
+    pip3 install --user --break-system-packages flask requests
+fi
 
 # Install Tailscale if not present
 if ! command -v tailscale &> /dev/null; then
