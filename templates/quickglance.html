@@ -30,7 +30,7 @@
         <!-- Time Block -->
         <div class="qg-time-block glass-tile">
             <div class="qg-current-time live-time">{{ state.content.time }}</div>
-            <span class="qg-countdown-inline {% if state.content.countdown_urgency == 'warning' or state.content.countdown_urgency == 'urgent' %}qg-countdown-urgent{% endif %}">
+            <span class="qg-countdown-inline {% if state.content.countdown_urgency == 'critical' %}qg-countdown-critical{% elif state.content.countdown_urgency == 'warning' or state.content.countdown_urgency == 'urgent' %}qg-countdown-urgent{% endif %}">
                 {% if state.content.countdown %}{{ state.content.countdown }}{% endif %}
                 {% if state.content.countdown_label %} ({{ state.content.countdown_label }}){% endif %}
             </span>
@@ -300,8 +300,16 @@
 }
 
 .qg-countdown-urgent {
-    background: #fff;
-    color: #0d0221;
+    background: #ffd700;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+}
+
+.qg-countdown-critical {
+    background: #ff4444;
+    color: #fff;
     padding: 4px 12px;
     border-radius: 8px;
     font-weight: 700;

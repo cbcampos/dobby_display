@@ -278,17 +278,9 @@ def build_quickglance():
     if countdown:
         parts = countdown.replace('h','').replace('m','').split()
         total_mins = int(parts[0]) * 60 + int(parts[1]) if len(parts) > 1 else int(parts[0])
-        if total_mins <= 15:
-            urgency = "urgent"
-        elif total_mins <= 30:
-            urgency = "caution"
-        elif total_mins <= 60:
-            urgency = "warning"
-    if countdown:
-        # Parse hours and mins
-        parts = countdown.replace('h','').replace('m','').split()
-        total_mins = int(parts[0]) * 60 + int(parts[1]) if len(parts) > 1 else int(parts[0])
-        if total_mins <= 15:
+        if total_mins <= 5:
+            urgency = "critical"
+        elif total_mins <= 15:
             urgency = "urgent"
         elif total_mins <= 30:
             urgency = "caution"
