@@ -58,8 +58,8 @@
         }
         
         .timestamp {
-            font-size: 0.9rem;
-            opacity: 0.7;
+            font-size: 0.7rem;
+            opacity: 0.5;
         }
         
         .content {
@@ -242,7 +242,7 @@
                 🧦 Dobby Display
                 <span class="mode-badge">{{ state.mode }}</span>
             </h1>
-            <div class="timestamp">Last updated: {{ state.updated }}</div>
+            <div class="timestamp" id="friendly-updated"></div>
         </header>
         
         <div class="content">
@@ -273,6 +273,16 @@
     </div>
     
     <script>
+        // Format timestamp friendily
+        function formatFriendlyTime(isoString) {
+            if (!isoString) return '';
+            try {
+                const date = new Date(isoString);
+                return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            } catch { return ''; }
+        }
+        document.getElementById('friendly-updated').textContent = 'Updated ' + formatFriendlyTime('{{ state.updated }}');
+        
         // Auto-refresh every 10 seconds to check for updates
         let lastUpdated = '{{ state.updated }}';
         setInterval(() => {
@@ -281,6 +291,7 @@
                 .then(data => {
                     if (data.updated !== lastUpdated) {
                         lastUpdated = data.updated;
+                        document.getElementById('friendly-updated').textContent = 'Updated ' + formatFriendlyTime(data.updated);
                         // Check for speech
                         if (data.speak) {
                             speak(data.speak);
