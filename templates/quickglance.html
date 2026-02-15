@@ -19,7 +19,7 @@
         {% if state.content.countdown_urgency == 'urgent' %}
         {# URGENT MODE - Countdown dominates #}
         <div class="qg-urgent-banner qg-urgent">
-            <div class="qg-urgent-time" class="live-time">{{ state.content.time }}</div>
+            <div class="qg-urgent-time live-time">{{ state.content.time }}</div>
             <div class="qg-urgent-countdown" data-event="10:00">
                 <span class="qg-urgent-label">{{ state.content.countdown_label }}</span>
                 <span class="qg-urgent-value">{{ state.content.countdown }}</span>
@@ -38,7 +38,7 @@
         {# NORMAL MODE - Countdown beside clock #}
         <div class="qg-top-row">
             <div class="qg-time-block">
-                <div class="qg-current-time" class="live-time">{{ state.content.time }}</div>
+                <div class="qg-current-time live-time">{{ state.content.time }}</div>
                 <div class="qg-date" id="live-date">{{ state.content.date }}</div>
             </div>
             {% if state.content.countdown %}
