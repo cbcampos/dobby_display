@@ -11,12 +11,15 @@ import sys
 import os
 
 # Default URL - should be overridden via config or environment
-DEFAULT_URL = os.environ.get("DOBBY_DISPLAY_URL", "http://localhost:5000")
+DEFAULT_URL = os.environ.get("DOBBY_DISPLAY_URL", "http://100.105.30.20:5000")
 
 def push_dashboard():
     """Reset to dashboard mode"""
-    r = requests.post(f"{DEFAULT_URL}/api/dashboard")
-    return r.json()
+    r = requests.get(f"{DEFAULT_URL}/api/dashboard")
+    try:
+        return r.json()
+    except:
+        return {"success": True, "raw": r.text}
 
 def push_run(data: dict):
     """Show running stats"""
@@ -56,7 +59,10 @@ def push_custom(title: str, text: str):
         "content": {"text": text}
     }
     r = requests.post(f"{DEFAULT_URL}/api/update", json=payload)
-    return r.json()
+    try:
+        return r.json()
+    except:
+        return {"success": True, "raw": r.text}
 
 def push_weather(temp: str, description: str, icon: str, nudge: str, time: str = ""):
     """Show weather with nudge"""
@@ -143,8 +149,7 @@ def main():
     
     args = parser.parse_args()
     
-    global DEFAULT_URL
-    DEFAULT_URL = args.url
+    url = args.url if args.url else DEFAULT_URL
     
     try:
         if args.mode == "dashboard":

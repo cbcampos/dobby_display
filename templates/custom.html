@@ -2,6 +2,10 @@
 <div class="custom-content animate-in">
     <h2 class="custom-title">{{ state.title }}</h2>
     <div class="custom-body">
-        {{ state.content.text or "Waiting for content..." }}
+        {% if state.content.text is string %}
+            {{ state.content.text | safe }}
+        {% else %}
+            {{ state.content | tojson | safe }}
+        {% endif %}
     </div>
 </div>
