@@ -20,8 +20,16 @@ else
 fi
 
 # Install Python dependencies
-echo "📦 Installing dependencies..."
+echo "📦 Installing Python dependencies..."
 pip3 install --user flask requests
+
+# Install Tailscale if not present
+if ! command -v tailscale &> /dev/null; then
+    echo "📦 Installing Tailscale..."
+    curl -fsSL https://tailscale.com/install.sh | sh
+else
+    echo "✓ Tailscale already installed"
+fi
 
 # Create a start script
 echo "📝 Creating start script..."
@@ -29,19 +37,31 @@ echo "📝 Creating start script..."
 cat > start_display.sh << 'EOF'
 #!/bin/bash
 cd ~/dobby_display
-echo "🚀 Starting Dobby Display on http://localhost:5000"
+echo "🚀 Starting Dobby Display..."
 echo "Press Ctrl+C to stop"
 python3 receiver.py
 EOF
 
 chmod +x start_display.sh
 
-# Create a systemd service file (optional, for auto-start)
+# Create Tailscale autostart script
+cat > start_tailscale.sh << 'EOF'
+#!/bin/bash
+echo "🔐 Connecting to Tailscale..."
+tailscale up --operator=root
+echo "📍 Your Tailscale IP:"
+tailscale ip -4
+EOF
+
+chmod +x start_tailscale.sh
+
+# Create a systemd service file for auto-start
 mkdir -p ~/.config/systemd/user
 cat > ~/.config/systemd/user/dobby-display.service << 'EOF'
 [Unit]
 Description=Dobby Display
 After=network.target
+Wants=network.target
 
 [Service]
 Type=simple
@@ -55,15 +75,17 @@ EOF
 echo ""
 echo "✅ Setup complete!"
 echo ""
-echo "To start the display manually:"
+echo "Step 1: Connect to Tailscale"
+echo "  ~/dobby_display/start_tailscale.sh"
+echo ""
+echo "Step 2: Get your Tailscale IP"
+echo "  tailscale ip -4"
+echo ""
+echo "Step 3: Start the display"
 echo "  ~/dobby_display/start_display.sh"
 echo ""
-echo "To auto-start on boot (optional):"
+echo "The display will be at: http://<TAILSCALE_IP>:5000"
+echo ""
+echo "To auto-start on boot:"
 echo "  systemctl --user enable dobby-display"
 echo "  systemctl --user start dobby-display"
-echo ""
-echo "The display will be available at:"
-echo "  http://localhost:5000"
-echo ""
-echo "To push content from OpenClaw, set:"
-echo "  export DOBBY_DISPLAY_URL=http://YOUR_DUET_IP:5000"
