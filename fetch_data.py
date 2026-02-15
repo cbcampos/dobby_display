@@ -6,6 +6,10 @@ Fetches all data needed for the quick glance display and pushes to the Duet.
 
 import os
 import sys
+
+# Fix PATH for cron jobs - include home bin where gog lives
+os.environ["PATH"] = os.environ.get("PATH", "") + ":/home/ccampos/bin:/usr/local/bin"
+
 import json
 import subprocess
 import requests
