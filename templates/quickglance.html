@@ -40,7 +40,7 @@
             <span class="qg-label">NEXT</span>
             <span class="qg-event-name">{{ content.next_event if content.next_event else "Nothing scheduled" }}</span>
             {% if content.next_event_time %}
-            <span class="qg-event-time">{{ content.next_event_time }}</span>
+            <span class="qg-event-time">starts {{ content.next_event_time }}</span>
             {% endif %}
         </div>
     </div>
