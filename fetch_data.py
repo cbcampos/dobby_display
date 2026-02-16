@@ -84,11 +84,13 @@ def get_routine_countdown():
         # Check calendar for matching event
         calendar_name = routine.get("trigger_calendar", "Me and You")
         event_match = routine.get("trigger_event_contains", "")
+        found_event = False
         
         events = get_calendar_events(calendar_name)
         for event in events:
             summary = event.get("summary", "")
-            if event_match.lower() in summary.lower():
+            if event_match and event_match.lower() in summary.lower():
+                found_event = True
                 # Found matching event
                 start = event.get("start", {}).get("dateTime", "")
                 if start:
@@ -114,6 +116,13 @@ def get_routine_countdown():
         
         # Check if we have a default time for this routine
         default_time = routine.get("event_time", "")
+        require_event = routine.get("require_event", False)
+        
+        # If require_event is true, only show countdown if a calendar event matched above
+        # Skip the default time fallback if require_event is true
+        if require_event and not found_event:
+            continue
+        
         if default_time:
             # Parse default time
             hour, minute = map(int, default_time.split(":"))
