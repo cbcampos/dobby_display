@@ -43,14 +43,23 @@ def load_config():
         return {"routines": []}
 
 def get_calendar_events(calendar_name="Me and You"):
-    """Fetch today's events from Google Calendar"""
+    """Fetch today's events from Google Calendar, excluding all-day events"""
     try:
         result = subprocess.run(
             ["gog", "calendar", "events", calendar_name, "--today", "--json"],
             capture_output=True, text=True, timeout=30
         )
         data = json.loads(result.stdout)
-        return data.get("events", [])
+        events = data.get("events", [])
+        # Filter out all-day events (they start at midnight 00:00:00 in the time portion)
+        filtered = []
+        for event in events:
+            start = event.get("start", {})
+            dateTime = start.get("dateTime", "")
+            # Exclude events that start at midnight (all-day events) - check for T00:00:00 pattern
+            if dateTime and "T00:00:00" not in dateTime:
+                filtered.append(event)
+        return filtered
     except Exception as e:
         print(f"Calendar error: {e}")
         return []
