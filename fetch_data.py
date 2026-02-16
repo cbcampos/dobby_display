@@ -363,8 +363,12 @@ def build_quickglance():
     
     return data
 
-def push_template():
+def push_template(force=False):
     """Push template to display automatically"""
+    if not force:
+        print("Skipping template push (use --force-template to push)")
+        return
+        
     template_path = os.path.join(os.path.dirname(__file__), "templates", "quickglance.html")
     try:
         with open(template_path, "r") as f:
@@ -387,12 +391,18 @@ def push_display(data):
     except Exception as e:
         print(f"Push error: {e}")
 
+import argparse
+
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Fetch and push quick glance data")
+    parser.add_argument("--force-template", action="store_true", help="Force push template to display")
+    args = parser.parse_args()
+    
     print("Building quick glance...")
     data = build_quickglance()
     print(json.dumps(data, indent=2))
     print("\nPushing template...")
-    push_template()
+    push_template(force=args.force_template)
     print("\nPushing to display...")
     push_display(data)
 

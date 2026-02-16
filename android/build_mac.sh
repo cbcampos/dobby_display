@@ -28,15 +28,16 @@ echo "📦 Installing Android SDK components..."
 sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
 
 # Clone the repo if not already
-if [ ! -d "dobby_display" ]; then
-    echo "📦 Cloning Dobby Display repo..."
-    git clone https://github.com/cbcampos/dobby_display.git
-fi
+cd ~
+rm -rf dobby_display
+git clone https://github.com/cbcampos/dobby_display.git
+cd dobby_display
 
-cd dobby_display/android/DobbyDisplay
+# Clear ALL Gradle caches to avoid version conflicts
+rm -rf ~/.gradle/caches/ 2>/dev/null || true
+rm -rf ~/.gradle/wrapper/ 2>/dev/null || true
 
-# Clear Gradle cache to avoid version conflicts
-rm -rf ~/.gradle/caches/8.* 2>/dev/null || true
+cd android/DobbyDisplay
 
 # Build the APK
 echo "🔨 Building APK..."
