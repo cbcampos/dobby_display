@@ -21,12 +21,6 @@ export ANDROID_HOME=~/Library/Android/sdk
 export ANDROID_SDK_ROOT=~/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
 
-# Create local.properties file with SDK path
-echo "📝 Creating local.properties..."
-cd ~/dobby_display/android/DobbyDisplay
-echo "sdk.dir=$ANDROID_HOME" > local.properties
-cd ~/dobby_display/android
-
 # Accept licenses
 yes | sdkmanager --licenses 2>/dev/null || true
 
@@ -39,6 +33,10 @@ cd ~
 rm -rf dobby_display
 git clone https://github.com/cbcampos/dobby_display.git
 cd dobby_display
+
+# Create local.properties file with SDK path in the CORRECT location
+echo "📝 Creating local.properties..."
+echo "sdk.dir=$ANDROID_HOME" > android/DobbyDisplay/local.properties
 
 # Clear ALL Gradle caches to avoid version conflicts
 rm -rf ~/.gradle/caches/ 2>/dev/null || true
