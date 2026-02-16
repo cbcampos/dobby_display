@@ -1,0 +1,88 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.dobby.display"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="34" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:7:5-67
+11-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:7:22-64
+12    <uses-permission android:name="android.permission.WAKE_LOCK" />
+12-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:8:5-68
+12-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:8:22-65
+13
+14    <permission
+14-->[androidx.core:core:1.9.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/4253bceb06fdecebf27e19449c4e7063/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
+15        android:name="com.dobby.display.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+15-->[androidx.core:core:1.9.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/4253bceb06fdecebf27e19449c4e7063/transformed/core-1.9.0/AndroidManifest.xml:23:9-81
+16        android:protectionLevel="signature" />
+16-->[androidx.core:core:1.9.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/4253bceb06fdecebf27e19449c4e7063/transformed/core-1.9.0/AndroidManifest.xml:24:9-44
+17
+18    <uses-permission android:name="com.dobby.display.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+18-->[androidx.core:core:1.9.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/4253bceb06fdecebf27e19449c4e7063/transformed/core-1.9.0/AndroidManifest.xml:26:5-97
+18-->[androidx.core:core:1.9.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/4253bceb06fdecebf27e19449c4e7063/transformed/core-1.9.0/AndroidManifest.xml:26:22-94
+19
+20    <application
+20-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:10:5-26:19
+21        android:allowBackup="true"
+21-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:11:9-35
+22        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+22-->[androidx.core:core:1.9.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/4253bceb06fdecebf27e19449c4e7063/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
+23        android:debuggable="true"
+24        android:extractNativeLibs="false"
+25        android:label="Dobby Display"
+25-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:12:9-38
+26        android:supportsRtl="true"
+26-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:13:9-35
+27        android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+27-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:14:9-67
+28        <activity
+28-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:16:9-25:20
+29            android:name="com.dobby.display.MainActivity"
+29-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:17:13-41
+30            android:configChanges="orientation|screenSize|keyboardHidden"
+30-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:18:13-74
+31            android:exported="true"
+31-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:19:13-36
+32            android:screenOrientation="landscape" >
+32-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:20:13-50
+33            <intent-filter>
+33-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:21:13-24:29
+34                <action android:name="android.intent.action.MAIN" />
+34-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:22:17-69
+34-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:22:25-66
+35
+36                <category android:name="android.intent.category.LAUNCHER" />
+36-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:23:17-77
+36-->/Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:23:27-74
+37            </intent-filter>
+38        </activity>
+39
+40        <provider
+40-->[androidx.emoji2:emoji2:1.2.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/a5521726343a35391d4e8bbbf2d64cd5/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+41            android:name="androidx.startup.InitializationProvider"
+41-->[androidx.emoji2:emoji2:1.2.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/a5521726343a35391d4e8bbbf2d64cd5/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
+42            android:authorities="com.dobby.display.androidx-startup"
+42-->[androidx.emoji2:emoji2:1.2.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/a5521726343a35391d4e8bbbf2d64cd5/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
+43            android:exported="false" >
+43-->[androidx.emoji2:emoji2:1.2.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/a5521726343a35391d4e8bbbf2d64cd5/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
+44            <meta-data
+44-->[androidx.emoji2:emoji2:1.2.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/a5521726343a35391d4e8bbbf2d64cd5/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+45                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+45-->[androidx.emoji2:emoji2:1.2.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/a5521726343a35391d4e8bbbf2d64cd5/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
+46                android:value="androidx.startup" />
+46-->[androidx.emoji2:emoji2:1.2.0] /Users/ccampos/.gradle/caches/8.11.1/transforms/a5521726343a35391d4e8bbbf2d64cd5/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
+47            <meta-data
+47-->[androidx.lifecycle:lifecycle-process:2.4.1] /Users/ccampos/.gradle/caches/8.11.1/transforms/afdbd79f5e5bd3280ee77f391e4c18b4/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:31:13-33:52
+48                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+48-->[androidx.lifecycle:lifecycle-process:2.4.1] /Users/ccampos/.gradle/caches/8.11.1/transforms/afdbd79f5e5bd3280ee77f391e4c18b4/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:32:17-78
+49                android:value="androidx.startup" />
+49-->[androidx.lifecycle:lifecycle-process:2.4.1] /Users/ccampos/.gradle/caches/8.11.1/transforms/afdbd79f5e5bd3280ee77f391e4c18b4/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:33:17-49
+50        </provider>
+51    </application>
+52
+53</manifest>

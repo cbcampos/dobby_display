@@ -28,7 +28,7 @@ public class MainActivity extends Activity {
         webSettings.setAllowContentAccess(true);
         
         // Enable audio autoplay
-        webSettings.setAutoplay(true);
+        // webSettings.setAutoplay(true); // Removed: API not available
         
         webView.setWebViewClient(new WebViewClient());
         
