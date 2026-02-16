@@ -1,12 +1,16 @@
 # Dobby Display Routines Configuration
 # Define countdown routines with their triggers and settings
-# Countdown logic:
-# - Church: ONLY shows on Sunday if there's a "Church" event on the calendar (require_event: true)
-# - School: Shows Mon-Fri at 7:30 AM (fixed time, no event required)
-# - Bedtime: Shows daily at 7:45 PM (fixed time, no event required)
+# 
+# COUNTDOWN POPUPS: When any calendar event is 15 minutes away, show a countdown popup
+# that displays for 15 seconds then returns to quickglance
+#
+# FIXED ROUTINES: Show on quickglance dashboard at specific times
+# - Church: Sunday mornings (if Church event exists)
+# - School: Mon-Fri at 7:30 AM
+# - Bedtime: Daily at 7:45 PM
 
 routines:
-  # Church - Sundays at 10am, show countdown 15 min before (only if Church event exists!)
+  # Church - Sundays at 10am, show countdown on quickglance 15 min before (only if Church event exists!)
   - name: "Church"
     trigger_calendar: "Me and You"
     trigger_event_contains: "Church"
@@ -14,24 +18,37 @@ routines:
     event_time: "10:00"
     leave_minutes_before: 15
     require_event: true  # ONLY show if Church event exists on calendar
+    show_on_quickglance: true
     enabled: true
 
-  # Take Franklin to school - weekday mornings at 7:30 AM
+  # Take Franklin to school - weekday mornings at 7:30 AM (quickglance)
   - name: "School"
     trigger_calendar: "Me and You"
-    trigger_event_contains: ""  # No event required - fixed time
+    trigger_event_contains: ""
     trigger_days: [1, 2, 3, 4, 5]  # Mon-Fri
-    event_time: "07:30"  # We leave at 7:30 AM
-    leave_minutes_before: 0  # Show as "School" at the time
-    require_event: false  # Always show at fixed time
+    event_time: "07:30"
+    leave_minutes_before: 0
+    require_event: false
+    show_on_quickglance: true
     enabled: true
 
-  # Bedtime - every day at 7:45 PM
+  # Bedtime - daily at 7:45 PM (quickglance)
   - name: "Bedtime"
     trigger_calendar: "Personal"
-    trigger_event_contains: ""  # No event required - fixed time
+    trigger_event_contains: ""
     trigger_days: [0, 1, 2, 3, 4, 5, 6]  # Every day
-    event_time: "19:45"  # 7:45 PM
-    leave_minutes_before: 0  # Show as "Bedtime" at the time
-    require_event: false  # Always show at fixed time
+    event_time: "19:45"
+    leave_minutes_before: 0
+    require_event: false
+    show_on_quickglance: true
+    enabled: true
+
+  # ANY EVENT POPUP - Show countdown popup 15 min before ANY calendar event
+  - name: "Any Event Popup"
+    trigger_calendar: "Me and You"  # Check Me and You calendar
+    trigger_event_contains: ""
+    trigger_days: [0, 1, 2, 3, 4, 5, 6]
+    minutes_before: 15  # Show 15 min before event
+    show_on_quickglance: false  # This is a popup, not dashboard
+    popup_duration: 15  # seconds
     enabled: true
