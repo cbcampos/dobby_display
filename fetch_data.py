@@ -64,6 +64,27 @@ def get_calendar_events(calendar_name="Me and You"):
         print(f"Calendar error: {e}")
         return []
 
+def get_upcoming_events(calendar_name="Me and You", days=7):
+    """Fetch upcoming events for the next N days, excluding all-day events"""
+    try:
+        result = subprocess.run(
+            ["gog", "calendar", "events", calendar_name, "--days", str(days), "--json"],
+            capture_output=True, text=True, timeout=30
+        )
+        data = json.loads(result.stdout)
+        events = data.get("events", [])
+        # Filter out all-day events (they start at midnight 00:00:00)
+        filtered = []
+        for event in events:
+            start = event.get("start", {})
+            dateTime = start.get("dateTime", "")
+            if dateTime and "T00:00:00" not in dateTime:
+                filtered.append(event)
+        return filtered
+    except Exception as e:
+        print(f"Calendar error: {e}")
+        return []
+
 def get_routine_countdown():
     """Check configured routines and return active countdown"""
     config = load_config()
@@ -258,7 +279,10 @@ def build_quickglance():
     """Build the quick glance data"""
     now = datetime.now().replace(tzinfo=timezone(CENTRAL_OFFSET))
     
+    # Today's events for current event
     events = get_calendar_events()
+    # Upcoming events (next 7 days) for next event
+    upcoming_events = get_upcoming_events()
     
     current_event = None
     current_event_time = None
@@ -267,6 +291,7 @@ def build_quickglance():
     next_event_time = None
     next_location = None
     
+    # Find current event (from today's events)
     for event in events:
         start = event.get("start", {}).get("dateTime", "")
         end = event.get("end", {}).get("dateTime", "")
@@ -280,10 +305,20 @@ def build_quickglance():
                 # Show END time of current event
                 current_event_time = event_end.strftime("%-I:%M %p") if event_end else ""
                 current_location = event.get("location", "")
-        elif not next_event and event_start and event_start > now:
-                next_event = event.get("summary", "Event")
-                next_event_time = event_start.strftime("%-I:%M %p")
-                next_location = event.get("location", "")
+    
+    # Find next event (from upcoming events)
+    for event in upcoming_events:
+        start = event.get("start", {}).get("dateTime", "")
+        event_start = parse_event_time(start)
+        
+        if event_start and event_start > now:
+            next_event = event.get("summary", "Event")
+            next_event_time = event_start.strftime("%-I:%M %p")
+            next_location = event.get("location", "")
+            # Check if it's tomorrow or later for date display
+            if event_start.date() > now.date():
+                next_event_time = event_start.strftime("%a %-I:%M %p")
+            break
     
     dinner = get_todoist_dinner()
     weather = get_weather()
