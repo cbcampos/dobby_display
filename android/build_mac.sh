@@ -35,6 +35,9 @@ fi
 
 cd dobby_display/android/DobbyDisplay
 
+# Clear Gradle cache to avoid version conflicts
+rm -rf ~/.gradle/caches/8.* 2>/dev/null || true
+
 # Build the APK
 echo "🔨 Building APK..."
 ./gradlew assembleDebug
