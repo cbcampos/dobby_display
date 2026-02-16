@@ -21,12 +21,16 @@ export ANDROID_HOME=~/Library/Android/sdk
 export ANDROID_SDK_ROOT=~/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
 
+# Create SDK directory if it doesn't exist
+mkdir -p "$ANDROID_HOME"
+
 # Accept licenses
 yes | sdkmanager --licenses 2>/dev/null || true
 
 # Install required SDK components
 echo "📦 Installing Android SDK components..."
-sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+echo "   SDK will be installed to: $ANDROID_HOME"
+sdkmanager --sdk_root="$ANDROID_HOME" "platforms;android-34" "build-tools;34.0.0" "platform-tools"
 
 # Clone the repo if not already
 cd ~
