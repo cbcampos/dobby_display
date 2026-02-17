@@ -337,7 +337,6 @@ if __name__ == '__main__':
     print("🎬 Dobby Display Receiver starting...")
     print("Open http://localhost:5000 in browser")
     print("Use /api/update to push content")
-    app.run(host='0.0.0.0', port=5000, debug=False)
 
 # Config API endpoints - must be after app is defined
 @app.route('/api/config', methods=['GET', 'POST'])
@@ -356,11 +355,13 @@ def fetch_on_startup():
     import os
     try:
         logger.info("Fetching data on startup...")
+        # Use absolute path to ensure it works when called from any directory
+        script_dir = os.path.dirname(os.path.abspath(__file__))
         env = os.environ.copy()
         env['PATH'] = env.get('PATH', '') + ':/home/ccampos/bin:/usr/local/bin'
         result = subprocess.run(
             ['python3', 'fetch_data.py'],
-            cwd=os.path.dirname(__file__),
+            cwd=script_dir,
             capture_output=True,
             text=True,
             timeout=30,
@@ -374,4 +375,13 @@ def fetch_on_startup():
         logger.error(f"Error fetching on startup: {e}")
 
 if __name__ == "__main__":
-    fetch_on_startup()
+    # Run startup fetch in background thread so it doesn't block server start
+    def background_fetch():
+        import time
+        time.sleep(2)  # Wait for server to start
+        fetch_on_startup()
+    
+    fetch_thread = threading.Thread(target=background_fetch, daemon=True)
+    fetch_thread.start()
+    
+    app.run(host='0.0.0.0', port=5000, debug=False)
