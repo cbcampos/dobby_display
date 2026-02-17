@@ -70,6 +70,9 @@ display_state = {
     "updated": None
 }
 
+# Store quickglance data separately so it persists across message dismissal
+quickglance_content = {}
+
 @app.route('/')
 def index():
     """Main display page - renders based on current mode"""
@@ -98,7 +101,7 @@ def refresh():
 @app.route('/api/update', methods=['POST'])
 def update():
     """Update the display content"""
-    global display_state
+    global display_state, quickglance_content
     
     data = request.json
     if not data:
@@ -110,8 +113,14 @@ def update():
         logger.warning(f"Content is not a dict: {type(content)}, resetting to empty dict")
         content = {}
     
+    mode = data.get("mode", "custom")
+    
+    # Store quickglance data so it persists across message dismissal
+    if mode == "quickglance":
+        quickglance_content = content
+    
     display_state = {
-        "mode": data.get("mode", "custom"),
+        "mode": mode,
         "title": data.get("title", "Dobby Display"),
         "content": content,
         "updated": datetime.now().isoformat()
@@ -283,12 +292,12 @@ def send_message():
 
 def auto_dismiss_message():
     """Auto-return to quickglance after message timeout"""
-    global display_state
+    global display_state, quickglance_content
     if display_state.get("mode") == "message":
         logger.info("Auto-dismissing message, returning to quickglance")
         display_state["mode"] = "quickglance"
         display_state["title"] = "Quick Look"
-        display_state["content"] = {}
+        display_state["content"] = quickglance_content
         display_state["updated"] = datetime.now().isoformat()
 
 
@@ -306,15 +315,15 @@ def get_type_color(message_type):
 
 @app.route('/api/clear-message', methods=['POST'])
 def clear_message():
-    """Clear the current message and return to quickglance"""
-    global display_state
+    """Clear the current message and return to quickglance, restoring saved content"""
+    global display_state, quickglance_content
     display_state = {
         "mode": "quickglance",
         "title": "Quick Look",
-        "content": {},
+        "content": quickglance_content,
         "updated": datetime.now().isoformat()
     }
-    logger.info("Message cleared, returning to quickglance")
+    logger.info("Message cleared, returning to quickglance with restored content")
     return jsonify({"success": True, "state": display_state})
 
 @app.route('/api/reload-templates', methods=['POST'])
