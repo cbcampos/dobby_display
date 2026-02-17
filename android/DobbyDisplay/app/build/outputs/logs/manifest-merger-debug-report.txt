@@ -76,6 +76,8 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/ccam
 		ADDED from /Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:11:9-35
 	android:theme
 		ADDED from /Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:14:9-67
+	android:usesCleartextTraffic
+		ADDED from /Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:14:68-103
 activity#com.dobby.display.MainActivity
 ADDED from /Users/ccampos/dobby_display/android/DobbyDisplay/app/src/main/AndroidManifest.xml:16:9-25:20
 	android:screenOrientation

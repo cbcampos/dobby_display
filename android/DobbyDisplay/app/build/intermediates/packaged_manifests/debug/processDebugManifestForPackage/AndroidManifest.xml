@@ -24,7 +24,8 @@
         android:extractNativeLibs="false"
         android:label="Dobby Display"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+        android:usesCleartextTraffic="true" >
         <activity
             android:name="com.dobby.display.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
