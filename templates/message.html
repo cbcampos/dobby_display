@@ -98,6 +98,11 @@
         background: {{ state.content.color|default('#667eea') }};
         transition: width linear;
     }
+    
+    @keyframes dismissTimer {
+        from { width: 100%; }
+        to { width: 0%; }
+    }
 </style>
 
 {% set type_icons = {
@@ -189,12 +194,6 @@
             checkDismiss();
         }
     </script>
-    <style>
-        @keyframes dismissTimer {
-            from { width: 100%; }
-            to { width: 0%; }
-        }
-    </style>
     {% endif %}
     {% endif %}
 </body>
