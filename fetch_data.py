@@ -548,6 +548,15 @@ def push_display(data, force=False):
             current_subset = {k: current.get(k) for k in key_fields}
             new_subset = {k: data.get(k) for k in key_fields}
             
+            # Don't push if new data has None/empty events but current has real events
+            # This prevents calendar API flakiness from clearing the display
+            if not force:
+                has_current_events = current_subset.get("next_event") and current_subset.get("next_event") != "None"
+                has_new_events = new_subset.get("next_event") and new_subset.get("next_event") != "None"
+                if has_current_events and not has_new_events:
+                    print("Skipping push: current has events but new data is empty (calendar likely flaky)")
+                    return
+            
             if not force and current_subset == new_subset:
                 print("Data unchanged, skipping push")
                 return
