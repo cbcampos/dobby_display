@@ -417,10 +417,9 @@ def get_weather():
         low = temp_f
         weather_arr = data.get("weather", [])
         if weather_arr:
-            today = weather_arr[0].get("day", [])
-            if today:
-                high = today[0].get("maxtempF", temp_f)
-                low = today[0].get("mintempF", temp_f)
+            today = weather_arr[0]
+            high = today.get("maxtempF", temp_f)
+            low = today.get("mintempF", temp_f)
         
         return {
             "icon": icon,
