@@ -376,8 +376,62 @@ def get_todoist_dinner():
         return "TBD"
 
 def get_weather():
-    """Get weather (placeholder)"""
-    return {"icon": "☀️", "temp": "58°", "high": "62", "low": "40", "desc": "Sunny"}
+    """Get weather from wttr.in for Fultondale, AL"""
+    try:
+        import urllib.request
+        url = "https://wttr.in/Fultondale+AL?format=j1"
+        with urllib.request.urlopen(url, timeout=10) as response:
+            data = json.loads(response.read().decode())
+        
+        current = data.get("current_condition", [{}])[0]
+        temp_f = current.get("temp_F", "N/A")
+        feels_like = current.get("FeelsLikeF", temp_f)
+        humidity = current.get("humidity", "N/A")
+        wind = current.get("windspeedMiles", "N/A")
+        desc = current.get("weatherDesc", [{}])[0].get("value", "Unknown")
+        
+        # Map weather description to icon
+        icon_map = {
+            "Sunny": "☀️",
+            "Clear": "🌙",
+            "Partly cloudy": "⛅",
+            "Cloudy": "☁️",
+            "Overcast": "☁️",
+            "Mist": "🌫️",
+            "Fog": "🌫️",
+            "Rain": "🌧️",
+            "Light rain": "🌦️",
+            "Heavy rain": "🌧️",
+            "Thunderstorm": "⛈️",
+            "Snow": "❄️",
+            "Light snow": "🌨️",
+        }
+        icon = "☀️"
+        for key, val in icon_map.items():
+            if key.lower() in desc.lower():
+                icon = val
+                break
+        
+        # Get today's high/low from weather array
+        high = temp_f
+        low = temp_f
+        weather_arr = data.get("weather", [])
+        if weather_arr:
+            today = weather_arr[0].get("day", [])
+            if today:
+                high = today[0].get("maxtempF", temp_f)
+                low = today[0].get("mintempF", temp_f)
+        
+        return {
+            "icon": icon,
+            "temp": f"{temp_f}°",
+            "high": high,
+            "low": low,
+            "desc": desc
+        }
+    except Exception as e:
+        print(f"Weather error: {e}")
+        return {"icon": "☀️", "temp": "58°", "high": "62", "low": "40", "desc": "Sunny"}
 
 def get_family_tasks():
     """Fetch family tasks from Todoist"""
