@@ -9,6 +9,7 @@ from flask import Flask, render_template, request, jsonify, redirect
 import os
 import json
 import logging
+import threading
 from datetime import datetime
 from jinja2 import ChoiceLoader, FileSystemLoader
 
@@ -272,7 +273,23 @@ def send_message():
     }
     
     logger.info(f"Message sent: type={message_type}, sticky={sticky}, auto_dismiss={auto_dismiss}")
+    
+    # Schedule auto-dismiss if needed
+    if auto_dismiss > 0 and not sticky:
+        threading.Timer(auto_dismiss, auto_dismiss_message).start()
+    
     return jsonify({"success": True, "state": display_state})
+
+
+def auto_dismiss_message():
+    """Auto-return to quickglance after message timeout"""
+    global display_state
+    if display_state.get("mode") == "message":
+        logger.info("Auto-dismissing message, returning to quickglance")
+        display_state["mode"] = "quickglance"
+        display_state["title"] = "Quick Look"
+        display_state["content"] = {}
+        display_state["updated"] = datetime.now().isoformat()
 
 
 def get_type_color(message_type):
