@@ -306,7 +306,7 @@
                         document.getElementById('friendly-updated').textContent = 'Updated ' + formatFriendlyTime(data.updated);
                     })
                     .catch(console.error);
-            }, 10000);
+            }, 60000);
         } else if (!isMessageMode) {
             setInterval(() => {
                 fetch('/api/status')
@@ -325,7 +325,7 @@
                         }
                     })
                     .catch(console.error);
-            }, 10000);
+            }, 60000);
         }
         
         function speak(text) {
